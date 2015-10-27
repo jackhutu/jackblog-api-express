@@ -1,18 +1,19 @@
 {
   "name": "jackblog-api-es5",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "jackblog server端es5版",
+  "main": "server/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp test",
+    "start": "gulp serve"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jackhutu/jackblog-api-es5.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["jackblog"],
+  "author": "Jack Hu",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/jackhutu/jackblog-api-es5/issues"
   },
