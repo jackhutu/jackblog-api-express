@@ -13,7 +13,6 @@ uploads
 node_modules
 bower_components
 dist
-test
 test_coverage
 process.json
 private
