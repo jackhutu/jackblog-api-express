@@ -3,7 +3,7 @@
 // 生产环境配置
 // =================================
 module.exports = {
-  port:     process.env.PORT || 8100,
+  port:     process.env.PORT || 8800,
   mongo: {
     uri: 'mongodb://localhost/jackblog',
     options: {

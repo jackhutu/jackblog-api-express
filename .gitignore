@@ -6,14 +6,13 @@ npm-debug.log*
 *.pid
 .tmp
 .sass-cache
-uploads
+#uploads
 
 ###############
 .DS_Store
 node_modules
 bower_components
 dist
-test
 test_coverage
 process.json
 private

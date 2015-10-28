@@ -1,7 +1,3 @@
-/**
- * Main application file
- */
-
 'use strict';
 
 // 设置默认环境变量
@@ -11,6 +7,7 @@ var mongoose = require('mongoose');
 var config = require('./config/env');
 var path = require('path');
 var fs = require('fs');
+var errorHandler = require('errorhandler');
 
 // 连接数据库.
 mongoose.connect(config.mongo.uri, config.mongo.options);
@@ -28,6 +25,15 @@ var app = express();
 
 require('./config/express')(app);
 require('./routes')(app);
+
+if ('development' === config.env) {
+  app.use(errorHandler());
+}else{
+	app.use(function (err, req, res, next) {
+	  console.error('server 500 error:', err);
+	  return res.status(500).send();
+	});
+}
 
 // Start server
 app.listen(config.port, function () {
