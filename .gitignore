@@ -11,8 +11,5 @@ uploads
 ###############
 .DS_Store
 node_modules
-bower_components
-dist
 test_coverage
-process.json
 private
