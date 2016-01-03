@@ -6,7 +6,7 @@ npm-debug.log*
 *.pid
 .tmp
 .sass-cache
-#uploads
+uploads
 
 ###############
 .DS_Store
