@@ -52,10 +52,10 @@ describe('test/api/comment.test.js',function () {
 		});
 	});
 
-	describe('post /api/comment/addNewComment',function () {
+	describe('post /comment/addNewComment',function () {
 
 		it('should when not aid return error',function (done) {
-			request.post('/api/comment/addNewComment')
+			request.post('/comment/addNewComment')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				content:'最亲爱的评论',
@@ -65,7 +65,7 @@ describe('test/api/comment.test.js',function () {
 		});
 
 		it('should when not content return error',function (done) {
-			request.post('/api/comment/addNewComment')
+			request.post('/comment/addNewComment')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				aid:mockArticleId,
@@ -76,7 +76,7 @@ describe('test/api/comment.test.js',function () {
 		});
 
 		it('should create a new comment',function (done) {
-			request.post('/api/comment/addNewComment')
+			request.post('/comment/addNewComment')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				aid:mockArticleId,
@@ -96,9 +96,9 @@ describe('test/api/comment.test.js',function () {
 		});
 	});
 
-	describe('post /api/comment/:id/addNewReply',function () {
+	describe('post /comment/:id/addNewReply',function () {
 		it('should when not content return error',function (done) {
-			request.post('/api/comment/' + mockCommentId + '/addNewReply')
+			request.post('/comment/' + mockCommentId + '/addNewReply')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				content:''
@@ -108,7 +108,7 @@ describe('test/api/comment.test.js',function () {
 		});
 
 		it('should create a new reply',function (done) {
-			request.post('/api/comment/' + mockCommentId + '/addNewReply')
+			request.post('/comment/' + mockCommentId + '/addNewReply')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				content:'最好的回复'
@@ -127,9 +127,9 @@ describe('test/api/comment.test.js',function () {
 	});
 
 	//由于travis只支持mongodb 2.4,而2.4不支持populate,所以跳过
-	describe.skip('get /api/comment/:id/getFrontCommentList',function () {
+	describe.skip('get /comment/:id/getFrontCommentList',function () {
 		it('should return comment list',function (done) {
-			request.get('/api/comment/' + mockArticleId + '/getFrontCommentList')
+			request.get('/comment/' + mockArticleId + '/getFrontCommentList')
 			.expect(200)
 			.expect('Content-Type', /json/)
 			.end(function (err,res) {
@@ -141,9 +141,9 @@ describe('test/api/comment.test.js',function () {
 		});
 	});
 
-	describe('put /api/comment/:id/delReply',function () {
+	describe('put /comment/:id/delReply',function () {
 		it('should return comment reply',function (done) {
-			request.put('/api/comment/' + mockCommentId + '/delReply')
+			request.put('/comment/' + mockCommentId + '/delReply')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				//rid:mockComment.reply[0]._id
@@ -153,7 +153,7 @@ describe('test/api/comment.test.js',function () {
 		});
 
 		it('should when id error return error',function (done) {
-			request.put('/api/comment/dddddddddd/delReply')
+			request.put('/comment/dddddddddd/delReply')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				rid:mockReplyId
@@ -163,7 +163,7 @@ describe('test/api/comment.test.js',function () {
 		});
 
 		it('should return comment reply',function (done) {
-			request.put('/api/comment/' + mockCommentId + '/delReply')
+			request.put('/comment/' + mockCommentId + '/delReply')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				rid:mockReplyId
@@ -179,15 +179,15 @@ describe('test/api/comment.test.js',function () {
 		});
 	});
 
-	describe('delete /api/comment/:id',function () {
+	describe('delete /comment/:id',function () {
 		it('should when id error return error',function (done) {
-			request.del('/api/comment/dddddddddd')
+			request.del('/comment/dddddddddd')
 			.set('Authorization','Bearer ' + token)
 			.expect(500,done)
 		});
 
 		it('should return success',function (done) {
-			request.del('/api/comment/' + mockCommentId)
+			request.del('/comment/' + mockCommentId)
 			.set('Authorization','Bearer ' + token)
 			.expect(200)
 			.expect('Content-Type', /json/)

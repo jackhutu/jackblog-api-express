@@ -1,12 +1,12 @@
 'use strict';
 
 var should = require("should");
-var qiniuHelper = require('../../server/components/qiniu');
+var qiniuHelper = require('../../server/util/qiniu');
 var sinon = require('sinon');
 var Promise = require('bluebird');
 require('should-promised');
 
-describe('test/components/qiniu.js',function () {
+describe('test/util/qiniu.js',function () {
 	var mockKey = 'PwzqKey';
 	var mockUrl = 'http://www.test.com/test.png';
 	var mockBucket = qiniuHelper.bucket;

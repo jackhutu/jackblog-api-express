@@ -37,9 +37,9 @@ describe('test/api/user.test.js',function () {
 			});
 		});
 
-	describe('post /api/users/addUser', function() {
+	describe('post /users/addUser', function() {
 		it('should when not nickname return error', function(done) {
-			request.post('/api/users/addUser')
+			request.post('/users/addUser')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				email:'test@test.com' + new Date().getTime(),
@@ -49,7 +49,7 @@ describe('test/api/user.test.js',function () {
 		});
 
 		it('should when not email return error', function(done) {
-			request.post('/api/users/addUser')
+			request.post('/users/addUser')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				nickname: "呢称" + new Date().getTime(),
@@ -59,7 +59,7 @@ describe('test/api/user.test.js',function () {
 		});
 
 		it('should when nickname error return error', function(done) {
-			request.post('/api/users/addUser')
+			request.post('/users/addUser')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				nickname: 'jakc^^&&',
@@ -70,7 +70,7 @@ describe('test/api/user.test.js',function () {
 		});
 
 		it('should when email error return error', function(done) {
-			request.post('/api/users/addUser')
+			request.post('/users/addUser')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				nickname: "呢称" + new Date().getTime(),
@@ -81,7 +81,7 @@ describe('test/api/user.test.js',function () {
 		});
 		var nickname = '呢称' + new Date().getTime();
 		it('should return new user', function(done) {
-			request.post('/api/users/addUser')
+			request.post('/users/addUser')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				nickname: nickname,
@@ -100,7 +100,7 @@ describe('test/api/user.test.js',function () {
 		});
 
 		it('should same nickname return error', function(done) {
-			request.post('/api/users/addUser')
+			request.post('/users/addUser')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				nickname: nickname,
@@ -112,11 +112,11 @@ describe('test/api/user.test.js',function () {
 
 	});
 
-	describe('put /api/users/:id/updateUser', function() {
+	describe('put /users/:id/updateUser', function() {
 		mockUpdateNickName = '呢称' + new Date().getTime();
 
 		it('should when not nickname return error', function(done) {
-			request.put('/api/users/' + mockUserId + '/updateUser')
+			request.put('/users/' + mockUserId + '/updateUser')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				email:'test@test.com' + new Date().getTime(),
@@ -125,7 +125,7 @@ describe('test/api/user.test.js',function () {
 			.expect(422,done);
 		});
 		it('should when not email return error', function(done) {
-			request.put('/api/users/' + mockUserId + '/updateUser')
+			request.put('/users/' + mockUserId + '/updateUser')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				nickname:mockUpdateNickName,
@@ -134,7 +134,7 @@ describe('test/api/user.test.js',function () {
 			.expect(422,done);
 		});
 		it('should when nickname error return error', function(done) {
-			request.put('/api/users/' + mockUserId + '/updateUser')
+			request.put('/users/' + mockUserId + '/updateUser')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				nickname:'jack^^%%',
@@ -144,7 +144,7 @@ describe('test/api/user.test.js',function () {
 			.expect(422,done);
 		});
 		it('should when email error return error', function(done) {
-			request.put('/api/users/' + mockUserId + '/updateUser')
+			request.put('/users/' + mockUserId + '/updateUser')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				nickname:mockUpdateNickName,
@@ -154,7 +154,7 @@ describe('test/api/user.test.js',function () {
 			.expect(422,done);
 		});
 		it('should return update user', function(done) {
-			request.put('/api/users/' + mockUserId + '/updateUser')
+			request.put('/users/' + mockUserId + '/updateUser')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				nickname:mockUpdateNickName,
@@ -171,7 +171,7 @@ describe('test/api/user.test.js',function () {
 			})
 		});
 		it('should update password return success', function(done) {
-			request.put('/api/users/' + mockUserId + '/updateUser')
+			request.put('/users/' + mockUserId + '/updateUser')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				nickname:mockUpdateNickName,
@@ -190,7 +190,7 @@ describe('test/api/user.test.js',function () {
 		});
 
 		it('should same nickname return error', function(done) {
-			request.put('/api/users/' + mockUserId + '/updateUser')
+			request.put('/users/' + mockUserId + '/updateUser')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				nickname:mockAdminNickname,
@@ -203,16 +203,16 @@ describe('test/api/user.test.js',function () {
 
 	});
 
-	describe('put /api/users/mdUser', function() {
+	describe('put /users/mdUser', function() {
 
 		it('should when not nickname return error', function(done) {
-			request.put('/api/users/mdUser')
+			request.put('/users/mdUser')
 			.set('Authorization','Bearer ' + token)
 			.expect(422,done);
 		});
 
 		it('should when nickname error return error', function(done) {
-			request.put('/api/users/mdUser')
+			request.put('/users/mdUser')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				nickname:'jack^^&&'
@@ -220,7 +220,7 @@ describe('test/api/user.test.js',function () {
 			.expect(422,done);
 		});
 		it('should return my user', function(done) {
-			request.put('/api/users/mdUser')
+			request.put('/users/mdUser')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				nickname:'呢称' + new Date().getTime()
@@ -236,7 +236,7 @@ describe('test/api/user.test.js',function () {
 		});
 
 		it('should when same nickname return error', function(done) {
-			request.put('/api/users/mdUser')
+			request.put('/users/mdUser')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				nickname: mockUpdateNickName
@@ -246,9 +246,9 @@ describe('test/api/user.test.js',function () {
 
 	});
 
-	describe('get /api/users/getUserList',function () {
+	describe('get /users/getUserList',function () {
 			it('should return users list',function (done) {
-				request.get('/api/users/getUserList')
+				request.get('/users/getUserList')
 				.set('Authorization','Bearer ' + token)
 				.expect(200)
 				.expect('Content-Type', /json/)
@@ -260,7 +260,7 @@ describe('test/api/user.test.js',function () {
 				})
 			});
 			it('should sort false return users list',function (done) {
-				request.get('/api/users/getUserList')
+				request.get('/users/getUserList')
 				.set('Authorization','Bearer ' + token)
 				.query({
 					itemsPerPage:1,
@@ -278,9 +278,9 @@ describe('test/api/user.test.js',function () {
 			});
 	});
 
-	describe('get /api/users/getUserProvider', function() {
+	describe('get /users/getUserProvider', function() {
 		it('should return User Provider', function(done) {
-			request.get('/api/users/getUserProvider')
+			request.get('/users/getUserProvider')
 			.set('Authorization','Bearer ' + token)
 			.expect(200)
 			.expect('Content-Type', /json/)
@@ -292,16 +292,16 @@ describe('test/api/user.test.js',function () {
 		});
 	});
 
-	describe('get /api/users/getCaptcha', function() {
+	describe('get /users/getCaptcha', function() {
 		it('should return captcha image', function(done) {
-			request.get('/api/users/getCaptcha')
+			request.get('/users/getCaptcha')
 			.expect(200,done);
 		});
 	});
 
-	describe('get /api/users/me', function() {
+	describe('get /users/me', function() {
 		it('should return me info', function(done) {
-			request.get('/api/users/me')
+			request.get('/users/me')
 			.set('Authorization','Bearer ' + token)
 			.expect(200)
 			.expect('Content-Type', /json/)
@@ -313,21 +313,21 @@ describe('test/api/user.test.js',function () {
 		});
 	});
 
-	describe('del /api/users/:id', function() {
+	describe('del /users/:id', function() {
 		it('should if userid === req.user._id return error', function(done) {
-			request.del('/api/users/' + mockAdminId)
+			request.del('/users/' + mockAdminId)
 			.set('Authorization','Bearer ' + token)
 			.expect(403,done);
 		});
 
 		it('should if userId error return error', function(done) {
-			request.del('/api/users/dddddd')
+			request.del('/users/dddddd')
 			.set('Authorization','Bearer ' + token)
 			.expect(500,done);
 		});
 
 		it('should return me info', function(done) {
-			request.del('/api/users/' + mockUserId)
+			request.del('/users/' + mockUserId)
 			.set('Authorization','Bearer ' + token)
 			.expect(200)
 			.expect('Content-Type', /json/)

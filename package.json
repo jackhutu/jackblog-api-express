@@ -5,13 +5,17 @@
   "main": "server/app.js",
   "scripts": {
     "test": "gulp test",
-    "start": "gulp serve"
+    "start": "gulp serve",
+    "pm2-start": "pm2 start process.json",
+    "pm2-restart": "pm2 restart process.json"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jackhutu/jackblog-api-es5.git"
   },
-  "keywords": ["jackblog"],
+  "keywords": [
+    "jackblog"
+  ],
   "author": "Jack Hu",
   "license": "MIT",
   "bugs": {

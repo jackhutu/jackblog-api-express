@@ -1,6 +1,6 @@
 var passport = require('passport');
 var WeiboStrategy = require('passport-weibo').Strategy;
-var tools = require('../../components/tools');
+var tools = require('../../util/tools');
 
 exports.setup = function (User,config) {
   passport.use(new WeiboStrategy({

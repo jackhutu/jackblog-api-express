@@ -6,10 +6,10 @@ var mongoose = require('mongoose'),
 	Article = mongoose.model('Article')
 	Logs = mongoose.model('Logs');
 var Promise = require('bluebird');
-var qiniuHelper = require('../../server/components/qiniu');
+var qiniuHelper = require('../../server/util/qiniu');
 var sinon = require('sinon');
 
-describe('test/api/blog.test.js',function () {
+describe('test/api/article.test.js',function () {
 	//测试需要一篇文章
 	var token, mockArticleId,mockAdminId;
 	var mockTagId = '55e127401cfddd2c4be93f6b';
@@ -44,9 +44,9 @@ describe('test/api/blog.test.js',function () {
 			});
 		});
 
-	describe('post /api/blog/addBlog',function () {
+	describe('post /article/addArticle',function () {
 		it('should not title return error',function (done) {
-			request.post('/api/blog/addBlog')
+			request.post('/article/addArticle')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				content:'测试文章内容![enter image description here](http://upload.jackhu.top/test/111.png "enter image title here")',
@@ -56,7 +56,7 @@ describe('test/api/blog.test.js',function () {
 		});
 
 		it('should not content return error',function (done) {
-			request.post('/api/blog/addBlog')
+			request.post('/article/addArticle')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				title:'测试文章标题' + new Date().getTime(),
@@ -69,7 +69,7 @@ describe('test/api/blog.test.js',function () {
 		// 	var stubArticle = sinon.stub(Article,'createAsync');
 		// 	stubArticle.returns(new TypeError('error message'));
 
-		// 	request.post('/api/blog/addBlog')
+		// 	request.post('/article/addArticle')
 		// 	.set('Authorization','Bearer ' + token)
 		// 	.send({
 		// 		title:'测试文章标题' + new Date().getTime(),
@@ -86,7 +86,7 @@ describe('test/api/blog.test.js',function () {
 		// });
 
 		it('should create a new article',function (done) {
-			request.post('/api/blog/addBlog')
+			request.post('/article/addArticle')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				title:'测试文章标题' + new Date().getTime(),
@@ -106,9 +106,9 @@ describe('test/api/blog.test.js',function () {
 		});
 	});
 
-	describe('put /api/blog/:id/updateBlog',function () {
+	describe('put /article/:id/updateArticle',function () {
 		it('should not title return error',function (done) {
-			request.put('/api/blog/' + mockArticleId + '/updateBlog')
+			request.put('/article/' + mockArticleId + '/updateArticle')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				content:'新的文章内容![enter image description here](http://upload.jackhu.top/test/111.png "enter image title here")',
@@ -119,7 +119,7 @@ describe('test/api/blog.test.js',function () {
 		});
 
 		it('should not content return error',function (done) {
-			request.put('/api/blog/' + mockArticleId + '/updateBlog')
+			request.put('/article/' + mockArticleId + '/updateArticle')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				title:'新的标题' + new Date().getTime(),
@@ -131,7 +131,7 @@ describe('test/api/blog.test.js',function () {
 
 
 		it('should return update a article',function (done) {
-			request.put('/api/blog/' + mockArticleId + '/updateBlog')
+			request.put('/article/' + mockArticleId + '/updateArticle')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				_id:mockArticleId,
@@ -152,10 +152,10 @@ describe('test/api/blog.test.js',function () {
 		});
 	});
 
-	describe('get /api/blog/getBlogList',function () {
+	describe('get /article/getArticleList',function () {
 
 		it('should return blog list',function (done) {
-			request.get('/api/blog/getBlogList')
+			request.get('/article/getArticleList')
 			.set('Authorization','Bearer ' + token)
 			.expect(200)
 			.expect('Content-Type', /json/)
@@ -170,7 +170,7 @@ describe('test/api/blog.test.js',function () {
 		});
 
 		it('should sort return blog list',function (done) {
-			request.get('/api/blog/getBlogList')
+			request.get('/article/getArticleList')
 			.set('Authorization','Bearer ' + token)
 			.query({
 				sortOrder:'false',
@@ -195,7 +195,7 @@ describe('test/api/blog.test.js',function () {
 	describe('upload image',function () {
 
 		it('should not file parmas return error',function (done) {
-			request.post('/api/blog/uploadImage')
+			request.post('/article/uploadImage')
 			.set('Authorization','Bearer ' + token)
 			.expect(422,done)
 		});
@@ -203,9 +203,9 @@ describe('test/api/blog.test.js',function () {
 		it('should resturn success',function (done) {
 			var stubQiniu = sinon.stub(qiniuHelper,'upload');
 			stubQiniu.returns(Promise.resolve({
-				url: "http://upload.jackhu.top/blog/article/test.png"
+				url: "http://upload.jackhu.top/article/article/test.png"
 			}));
-			request.post('/api/blog/uploadImage')
+			request.post('/article/uploadImage')
 			.set('Authorization','Bearer ' + token)
 			.attach('file', __dirname + '/upload.test.png')
 			.expect('Content-Type', /json/)
@@ -213,7 +213,7 @@ describe('test/api/blog.test.js',function () {
 			.end(function (err,res) {
 				if(err) return done(err);
 				res.body.success.should.be.true();
-				res.body.img_url.should.be.equal("http://upload.jackhu.top/blog/article/test.png");
+				res.body.img_url.should.be.equal("http://upload.jackhu.top/article/article/test.png");
 				stubQiniu.calledOnce.should.be.true();
 				stubQiniu.restore();
 				done();
@@ -227,9 +227,9 @@ describe('test/api/blog.test.js',function () {
 		it('should resturn success',function (done) {
 			var stubQiniu = sinon.stub(qiniuHelper,'fetch');
 			stubQiniu.returns(Promise.resolve({
-				url: "http://upload.jackhu.top/blog/article/test.png"
+				url: "http://upload.jackhu.top/article/article/test.png"
 			}));
-			request.post('/api/blog/fetchImage')
+			request.post('/article/fetchImage')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				url:'http://www.test.com/test.png'
@@ -239,7 +239,7 @@ describe('test/api/blog.test.js',function () {
 			.end(function (err,res) {
 				if(err) return done(err);
 				res.body.success.should.be.true();
-				res.body.img_url.should.be.equal("http://upload.jackhu.top/blog/article/test.png");
+				res.body.img_url.should.be.equal("http://upload.jackhu.top/article/article/test.png");
 				stubQiniu.calledOnce.should.be.true();
 				stubQiniu.restore();
 				done();
@@ -247,7 +247,7 @@ describe('test/api/blog.test.js',function () {
 		});
 
 		it('should not url parmas return error',function (done) {
-			request.post('/api/blog/fetchImage')
+			request.post('/article/fetchImage')
 			.set('Authorization','Bearer ' + token)
 			.expect(422,done);
 		});
@@ -255,9 +255,9 @@ describe('test/api/blog.test.js',function () {
 
 	});
 
-	describe('get /api/blog/:id/getBlog',function () {
+	describe('get /article/:id/getArticle',function () {
 		it('should return a article',function (done) {
-			request.get('/api/blog/' + mockArticleId + '/getBlog')
+			request.get('/article/' + mockArticleId + '/getArticle')
 			.set('Authorization', 'Bearer ' + token)
 			.expect('Content-Type', /json/)
 			.expect(200)
@@ -270,10 +270,10 @@ describe('test/api/blog.test.js',function () {
 	});
 
 
-	describe('get /api/blog/getFrontBlogList',function () {
+	describe('get /article/getFrontArticleList',function () {
 
 		it('should return blog list', function (done) {
-		  request.get('/api/blog/getFrontBlogList')
+		  request.get('/article/getFrontArticleList')
 		  	.expect('Content-Type', /json/)
 		  	.expect(200)
 		    .end(function (err, res) {
@@ -283,7 +283,7 @@ describe('test/api/blog.test.js',function () {
 		    });
 		});
 		it('should when has tagId return list',function (done) {
-			request.get('/api/blog/getFrontBlogList')
+			request.get('/article/getFrontArticleList')
 				.query({
 		      itemsPerPage: 1,
 		      sortName:'visit_count',
@@ -301,9 +301,9 @@ describe('test/api/blog.test.js',function () {
 
 	});
 
-	describe('get /api/blog/getFrontBlogCount',function () {
+	describe('get /article/getFrontArticleCount',function () {
 		it('should return blog list count',function (done) {
-			request.get('/api/blog/getFrontBlogCount')
+			request.get('/article/getFrontArticleCount')
 			.expect('Content-Type', /json/)
 			.expect(200)
 			.end(function (err,res) {
@@ -315,7 +315,7 @@ describe('test/api/blog.test.js',function () {
 		});
 
 		it('should when has tagId return count',function (done) {
-			request.get('/api/blog/getFrontBlogCount')
+			request.get('/article/getFrontArticleCount')
 				.query({
 		      itemsPerPage: 1,
 		      sortName:'visit_count',
@@ -334,9 +334,9 @@ describe('test/api/blog.test.js',function () {
 		
 	});
 
-	describe('get /api/blog/:id/getFrontArticle',function () {
+	describe('get /article/:id/getFrontArticle',function () {
 		it('should return article',function (done) {
-			request.get('/api/blog/' + mockArticleId + '/getFrontArticle')
+			request.get('/article/' + mockArticleId + '/getFrontArticle')
 			.expect('Content-Type', /json/)
 			.expect(200)
 			.end(function (err,res) {
@@ -349,7 +349,7 @@ describe('test/api/blog.test.js',function () {
 
 
 
-	describe('get /api/blog/getIndexImage',function () {
+	describe('get /article/getIndexImage',function () {
 		var stubQiniu;
 		beforeEach(function () {
 			stubQiniu = sinon.stub(qiniuHelper,'list');
@@ -362,7 +362,7 @@ describe('test/api/blog.test.js',function () {
 			stubQiniu.returns(Promise.resolve({items:[{
 				key:'aaaabbbbdddddcccc'
 			}]}));
-			request.get('/api/blog/getIndexImage')
+			request.get('/article/getIndexImage')
 			.expect(200)
 			.end(function (err,res) {
 				if (err) return done(err);
@@ -375,7 +375,7 @@ describe('test/api/blog.test.js',function () {
 		
 	});
 
-	describe('get /api/blog/:id/getPrenext', function() {
+	describe('get /article/:id/getPrenext', function() {
 		var nextArticleId;
 		before(function (done) {
 			Article.createAsync({
@@ -396,7 +396,7 @@ describe('test/api/blog.test.js',function () {
 		});
 
 		it('should return next and prev blog',function (done) {
-			request.get('/api/blog/' + mockArticleId + '/getPrenext')
+			request.get('/article/' + mockArticleId + '/getPrenext')
 			.expect('Content-Type', /json/)
 			.expect(200)
 			.end(function (err,res) {
@@ -408,7 +408,7 @@ describe('test/api/blog.test.js',function () {
 		});
 
 		it('should when has tagId return nextpre blog',function (done) {
-			request.get('/api/blog/' + mockArticleId + '/getPrenext')
+			request.get('/article/' + mockArticleId + '/getPrenext')
 			.query({
 				sortName:'visit_count',
 				tagId:mockTagId
@@ -425,9 +425,9 @@ describe('test/api/blog.test.js',function () {
 
 	});
 
-	describe('put /api/blog/:id/toggleLike', function() {
+	describe('put /article/:id/toggleLike', function() {
 		it('should add like return success',function (done) {
-			request.put('/api/blog/' + mockArticleId + '/toggleLike')
+			request.put('/article/' + mockArticleId + '/toggleLike')
 			.set('Authorization', 'Bearer ' + token)
 			.expect('Content-Type', /json/)
 			.expect(200)
@@ -440,7 +440,7 @@ describe('test/api/blog.test.js',function () {
 			})
 		});
 		it('should when second toggle like return success',function (done) {
-			request.put('/api/blog/' + mockArticleId + '/toggleLike')
+			request.put('/article/' + mockArticleId + '/toggleLike')
 			.set('Authorization', 'Bearer ' + token)
 			.expect('Content-Type', /json/)
 			.expect(200)
@@ -454,16 +454,16 @@ describe('test/api/blog.test.js',function () {
 		});
 	});
 
-	describe('delete /api/blog/:id', function() {
+	describe('delete /article/:id', function() {
 		it('should when id error return error',function (done) {
-			request.del('/api/blog/ddddddd')
+			request.del('/article/ddddddd')
 			.set('Authorization', 'Bearer ' + token)
 			.expect(500,done);
 
 		});
 
 		it('should return success',function (done) {
-			request.del('/api/blog/' + mockArticleId)
+			request.del('/article/' + mockArticleId)
 			.set('Authorization', 'Bearer ' + token)
 			.expect(200)
 			.end(function (err,res) {

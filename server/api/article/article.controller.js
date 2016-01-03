@@ -2,19 +2,19 @@
 
 var _ = require('lodash');
 var mongoose = require('mongoose');
-var Blog = mongoose.model('Article');
+var Article = mongoose.model('Article');
 var User = mongoose.model('User');
 var Comment = mongoose.model('Comment');
-var qiniuHelper = require('../../components/qiniu');
+var qiniuHelper = require('../../util/qiniu');
 var path = require('path');
 var URL = require('url');
 var MarkdownIt = require('markdown-it');
 var config = require('../../config/env');
 var Promise = require("bluebird");
-var tools = require('../../components/tools');
+var tools = require('../../util/tools');
 
 //添加博客
-exports.addBlog = function (req,res) {
+exports.addArticle = function (req,res) {
 	var content = req.body.content;
 	var title = req.body.title;
 	var error_msg;
@@ -28,14 +28,14 @@ exports.addBlog = function (req,res) {
 	}
 	//将图片提取存入images,缩略图调用
 	req.body.images = tools.extractImage(content);
-	return Blog.createAsync(req.body).then(function (result) {
+	return Article.createAsync(req.body).then(function (result) {
 		return res.status(200).json({success: true,article_id:result._id});
 	}).catch(function (err) {
 	 	return res.status(500).send();	
 	});
 }
 //后台获取博客列表
-exports.getBlogList = function (req,res) {
+exports.getArticleList = function (req,res) {
 	var currentPage = (parseInt(req.query.currentPage) > 0)?parseInt(req.query.currentPage):1;
 	var itemsPerPage = (parseInt(req.query.itemsPerPage) > 0)?parseInt(req.query.itemsPerPage):10;
 	var startRow = (currentPage - 1) * itemsPerPage;
@@ -46,13 +46,13 @@ exports.getBlogList = function (req,res) {
 		sortName = "-" + sortName;
 	}
 
-	Blog.find()
+	Article.find()
 		.skip(startRow)
 		.limit(itemsPerPage)
 		.sort(sortName)
-		.exec().then(function (blogList) {
-			return Blog.countAsync().then(function (count) {
-				return res.status(200).json({ data: blogList, count:count });
+		.exec().then(function (ArticleList) {
+			return Article.countAsync().then(function (count) {
+				return res.status(200).json({ data: ArticleList, count:count });
 			});
 		}).then(null,function (err) {
 			return res.status(500).send();
@@ -62,7 +62,7 @@ exports.getBlogList = function (req,res) {
 //删除博客(连同这篇文章的评论一起删除.)
 exports.destroy = function (req,res) {
 	var id = req.params.id;
-	return Blog.findByIdAndRemoveAsync(id).then(function() {
+	return Article.findByIdAndRemoveAsync(id).then(function() {
 		return Comment.removeAsync({aid:id}).then(function () {
 			return res.status(200).send({success: true});
 		});
@@ -71,7 +71,7 @@ exports.destroy = function (req,res) {
 	});
 }
 //更新博客
-exports.updateBlog = function (req,res) {
+exports.updateArticle = function (req,res) {
 	var id = req.params.id;
 	if(req.body._id){
 	  delete req.body._id;
@@ -94,19 +94,19 @@ exports.updateBlog = function (req,res) {
 		req.body.publish_time = new Date();
 	}
 
-	Blog.findByIdAndUpdateAsync(id,req.body,{new:true}).then(function(article){
+	Article.findByIdAndUpdateAsync(id,req.body,{new:true}).then(function(article){
 		return res.status(200).json({success:true,article_id:article._id});
 	}).catch(function(err){
 		return res.status(500).send();	
 	});
 }
 //获取单篇博客
-exports.getBlog = function (req,res) {
+exports.getArticle = function (req,res) {
 	var id = req.params.id;
-	Blog.findOne({_id:id})
+	Article.findOne({_id:id})
 		.populate('tags')
-		.exec().then(function (blog) {
-			return res.status(200).json({data:blog});
+		.exec().then(function (article) {
+			return res.status(200).json({data:article});
 		}).then(null,function (err) {
 			return res.status(500).send();
 		});
@@ -152,21 +152,21 @@ exports.fetchImage = function (req,res) {
 	});
 }
 //前台获取博客数量
-exports.getFrontBlogCount = function (req,res) {
+exports.getFrontArticleCount = function (req,res) {
 	var condition = {status:{$gt:0}};
 	if(req.query.tagId){
 		//tagId = new mongoose.Types.ObjectId(tagId);
 		var tagId = String(req.query.tagId);
 		condition = _.defaults(condition,{ tags: { $elemMatch: { $eq:tagId } } });
 	}
-	Blog.countAsync(condition).then(function (count) {
+	Article.countAsync(condition).then(function (count) {
 		return res.status(200).json({success:true,count:count});
 	}).catch(function (err) {
 		return res.status(500).send();
 	})
 }
 //前台获取博客列表
-exports.getFrontBlogList = function (req,res) {
+exports.getFrontArticleList = function (req,res) {
 	var currentPage = (parseInt(req.query.currentPage) > 0)?parseInt(req.query.currentPage):1;
 	var itemsPerPage = (parseInt(req.query.itemsPerPage) > 0)?parseInt(req.query.itemsPerPage):10;
 	var startRow = (currentPage - 1) * itemsPerPage;
@@ -178,7 +178,7 @@ exports.getFrontBlogList = function (req,res) {
 		var tagId = String(req.query.tagId);
 		condition = _.defaults(condition,{ tags: { $elemMatch: { $eq:tagId } } });		
 	}
-	Blog.find(condition)
+	Article.find(condition)
 		.select('title images visit_count comment_count like_count publish_time')
 		.skip(startRow)
 		.limit(itemsPerPage)
@@ -197,11 +197,11 @@ exports.getFrontArticle = function (req,res) {
 		html:true //启用html标记转换
 	});
 	//每次获取之后,将阅读数加1
-	return Blog.findByIdAsync(id,'-images').then(function(result) {
+	return Article.findByIdAsync(id,'-images').then(function(result) {
 		//将content markdown文档转成HTML
 		result.content = md.render(result.content);
 		result.visit_count++;
-		Blog.findByIdAndUpdateAsync(id,{$inc:{visit_count:1}});
+		Article.findByIdAndUpdateAsync(id,{$inc:{visit_count:1}});
 		return res.status(200).json({data:result.info});
 	}).catch(function (err) {
 		return res.status(500).send();	
@@ -222,7 +222,7 @@ exports.getPrenext = function (req,res) {
 		preCondition =  _.defaults(preCondition,{ tags: { $elemMatch: { $eq:tagId } } });
 		nextCondition =  _.defaults(nextCondition,{ tags: { $elemMatch: { $eq:tagId } } });
 	}
-	Blog.findByIdAsync(id).then(function (article) {
+	Article.findByIdAsync(id).then(function (article) {
 		//先获取文章,
 		if(sort === 'visit_count'){
 			preCondition = _.defaults(preCondition,{'_id':{$ne:id},'visit_count':{'$lte':article.visit_count}});
@@ -231,13 +231,13 @@ exports.getPrenext = function (req,res) {
 			preCondition = _.defaults(preCondition,{'_id':{$ne:id},'publish_time':{'$lte':article.publish_time}});
 			nextCondition = _.defaults(nextCondition,{'_id':{$ne:id},'publish_time':{'$gte':article.publish_time}});
 		}
-		var prePromise = Blog.find(preCondition)
+		var prePromise = Article.find(preCondition)
 			.select('title')
 			.limit(1)
 			.sort('-' + sort)
 			.exec();
 
-		var nextPromise = Blog.find(nextCondition)
+		var nextPromise = Article.find(nextCondition)
 				.select('title')
 				.limit(1)
 				.sort(sort)
@@ -299,8 +299,8 @@ exports.toggleLike = function (req,res) {
   }
 
   User.findByIdAndUpdateAsync(userId,conditionOne).then(function (user) {
-  	return Blog.findByIdAndUpdateAsync(aid,conditionTwo,{new:true}).then(function (blog) {
-  		return res.status(200).json({success:true,'count':blog.like_count,'isLike':liked});
+  	return Article.findByIdAndUpdateAsync(aid,conditionTwo,{new:true}).then(function (article) {
+  		return res.status(200).json({success:true,'count':article.like_count,'isLike':liked});
   	});
   }).catch(function (err) {
   	return res.status(500).send();

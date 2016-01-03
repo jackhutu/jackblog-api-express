@@ -1,7 +1,7 @@
 var should = require("should");
-var tools = require('../../server/components/tools');
+var tools = require('../../server/util/tools');
 
-describe('test/components/tools.js',function () {
+describe('test/util/tools.js',function () {
 
 	describe('randomString',function () {
 		it('should return 12 length string',function () {

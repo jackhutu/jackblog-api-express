@@ -1,6 +1,6 @@
 var passport = require('passport');
 var qqStrategy = require('passport-qq').Strategy;
-var tools = require('../../components/tools');
+var tools = require('../../util/tools');
 
 exports.setup = function (User,config) {
   passport.use(new qqStrategy({

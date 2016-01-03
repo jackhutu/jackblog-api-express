@@ -37,10 +37,10 @@ describe('test/api/tags.test.js',function () {
 		});
 	});
 
-	describe('post /api/tags/addTagCat', function() {
+	describe('post /tags/addTagCat', function() {
 		var catName = '标签分类名' + new Date().getTime();
 		it('should when not name return error', function(done) {
-			request.post('/api/tags/addTagCat')
+			request.post('/tags/addTagCat')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				desc:'测试标签分类名'
@@ -49,7 +49,7 @@ describe('test/api/tags.test.js',function () {
 		});
 
 		it('should return new tag category', function(done) {
-			request.post('/api/tags/addTagCat')
+			request.post('/tags/addTagCat')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				name: catName,
@@ -66,7 +66,7 @@ describe('test/api/tags.test.js',function () {
 			})
 		});
 		it('should when second add catName return error', function(done) {
-			request.post('/api/tags/addTagCat')
+			request.post('/tags/addTagCat')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				name: catName,
@@ -76,10 +76,10 @@ describe('test/api/tags.test.js',function () {
 		});
 	});
 
-	describe('post /api/tags/addTag', function() {
+	describe('post /tags/addTag', function() {
 		var tagName = '标签名称' + new Date().getTime();
 		it('should when not name return error', function(done) {
-			request.post('/api/tags/addTag')
+			request.post('/tags/addTag')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				cid:mockTagCatId,
@@ -89,7 +89,7 @@ describe('test/api/tags.test.js',function () {
 		});
 
 		it('should when not cid return error', function(done) {
-			request.post('/api/tags/addTag')
+			request.post('/tags/addTag')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				name:tagName,
@@ -99,7 +99,7 @@ describe('test/api/tags.test.js',function () {
 		});
 
 		it('should return new tag', function(done) {
-			request.post('/api/tags/addTag')
+			request.post('/tags/addTag')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				name:tagName,
@@ -117,7 +117,7 @@ describe('test/api/tags.test.js',function () {
 			})
 		});
 		it('should when second add tagName return error', function(done) {
-			request.post('/api/tags/addTag')
+			request.post('/tags/addTag')
 			.set('Authorization','Bearer ' + token)
 			.send({
 				name:tagName,
@@ -128,9 +128,9 @@ describe('test/api/tags.test.js',function () {
 		});
 	});
 
-	describe('put /api/tags/:id/updateTagCat', function() {
+	describe('put /tags/:id/updateTagCat', function() {
 		it('should return update tag category',function (done) {
-			request.put('/api/tags/' + mockTagCatId + '/updateTagCat')
+			request.put('/tags/' + mockTagCatId + '/updateTagCat')
 						.set('Authorization','Bearer ' + token)
 						.send({
 							_id:mockTagCatId,
@@ -148,9 +148,9 @@ describe('test/api/tags.test.js',function () {
 		})
 	});
 
-	describe('put /api/tags/:id/updateTag', function() {
+	describe('put /tags/:id/updateTag', function() {
 		it('should return update tag',function (done) {
-			request.put('/api/tags/' + mockTagId + '/updateTag')
+			request.put('/tags/' + mockTagId + '/updateTag')
 						.set('Authorization','Bearer ' + token)
 						.send({
 							_id:mockTagId,
@@ -167,9 +167,9 @@ describe('test/api/tags.test.js',function () {
 		})
 	});
 
-	describe('get /api/tags/getTagCatList',function () {
+	describe('get /tags/getTagCatList',function () {
 		it('should return tag category list',function (done) {
-			request.get('/api/tags/getTagCatList')
+			request.get('/tags/getTagCatList')
 			.set('Authorization','Bearer ' + token)
 			.expect(200)
 			.expect('Content-Type', /json/)
@@ -182,9 +182,9 @@ describe('test/api/tags.test.js',function () {
 		});
 	});
 
-	describe('get /api/tags/:id/getTagList',function () {
+	describe('get /tags/:id/getTagList',function () {
 		it('should return tag list in category',function (done) {
-			request.get('/api/tags/' + mockTagCatId + '/getTagList')
+			request.get('/tags/' + mockTagCatId + '/getTagList')
 			.set('Authorization','Bearer ' + token)
 			.expect(200)
 			.expect('Content-Type', /json/)
@@ -197,7 +197,7 @@ describe('test/api/tags.test.js',function () {
 		});
 
 		it('should return all tag list',function (done) {
-			request.get('/api/tags/0/getTagList')
+			request.get('/tags/0/getTagList')
 			.set('Authorization','Bearer ' + token)
 			.expect(200)
 			.expect('Content-Type', /json/)
@@ -210,9 +210,9 @@ describe('test/api/tags.test.js',function () {
 		});
 	});
 
-	describe('get /api/tags/getFrontTagList',function () {
+	describe('get /tags/getFrontTagList',function () {
 		it('should return tag list to frontend',function (done) {
-			request.get('/api/tags/getFrontTagList')
+			request.get('/tags/getFrontTagList')
 			.expect(200)
 			.expect('Content-Type', /json/)
 			.end(function (err,res) {
@@ -224,23 +224,23 @@ describe('test/api/tags.test.js',function () {
 
 	});
 
-	describe('delete /api/tags/:id',function () {
+	describe('delete /tags/:id',function () {
 		it('should return error',function (done) {
-			request.del('/api/tags/' + mockTagCatId)
+			request.del('/tags/' + mockTagCatId)
 			.set('Authorization','Bearer ' + token)
 			.expect(403,done);
 		});
 	});
 
-	describe('delete /api/tags/:id/deleteTag',function () {
+	describe('delete /tags/:id/deleteTag',function () {
 		it('should return error',function (done) {
-			request.del('/api/tags/dddddd/deleteTag')
+			request.del('/tags/dddddd/deleteTag')
 			.set('Authorization','Bearer ' + token)
 			.expect(500,done);
 		});
 
 		it('should return success',function (done) {
-			request.del('/api/tags/' + mockTagId + '/deleteTag')
+			request.del('/tags/' + mockTagId + '/deleteTag')
 			.set('Authorization','Bearer ' + token)
 			.expect(200)
 			.expect('Content-Type', /json/)
@@ -254,14 +254,14 @@ describe('test/api/tags.test.js',function () {
 
 	});
 
-	describe('delete /api/tags/:id',function () {
+	describe('delete /tags/:id',function () {
 		it('should return error',function (done) {
-			request.del('/api/tags/dddddd')
+			request.del('/tags/dddddd')
 			.set('Authorization','Bearer ' + token)
 			.expect(500,done);
 		});
 		it('should return success',function (done) {
-			request.del('/api/tags/' + mockTagCatId)
+			request.del('/tags/' + mockTagCatId)
 			.set('Authorization','Bearer ' + token)
 			.expect(200)
 			.expect('Content-Type', /json/)

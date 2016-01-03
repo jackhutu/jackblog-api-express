@@ -52,9 +52,9 @@ describe('test/api/logs.test.js',function () {
 		});
 	});
 
-	describe('get /api/logs/getLogsList',function () {
+	describe('get /logs/getLogsList',function () {
 		it('should return logs list',function (done) {
-			request.get('/api/logs/getLogsList')
+			request.get('/logs/getLogsList')
 			.set('Authorization','Bearer ' + token)
 			.expect(200)
 			.expect('Content-Type', /json/)
@@ -67,7 +67,7 @@ describe('test/api/logs.test.js',function () {
 
 		});
 		it('should when sort desc return logs list',function (done) {
-			request.get('/api/logs/getLogsList')
+			request.get('/logs/getLogsList')
 			.query({
 				itemsPerPage:1,
 				currentPage:2,

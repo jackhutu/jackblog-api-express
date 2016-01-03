@@ -1,6 +1,6 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var logger = require('../../components/logs');
+var logger = require('../../util/logs');
 
 exports.setup = function (User, config) {
   passport.use(new LocalStrategy({
