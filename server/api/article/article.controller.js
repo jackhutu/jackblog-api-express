@@ -212,7 +212,6 @@ exports.getFrontArticle = function (req,res) {
 exports.getPrenext = function (req,res) {
 	var id = req.params.id;
 	var sort = String(req.query.sortName) || "publish_time";
-	//sort = "-" + sort;
 	var preCondition,nextCondition;
 	preCondition = {status:{$gt:0}};
 	nextCondition = {status:{$gt:0}};
@@ -264,7 +263,7 @@ exports.getIndexImage = function (req,res) {
 		res.status(200).json({success:true,img:config.defaultIndexImage});
 		qiniuHelper.list('blog/index','',10).then(function(result){
 			return Promise.map(result.items,function (item) {
-				return config.qiniu.domain + item.key + '?imageView2/1/w/600/h/1500/q/80';
+				return config.qiniu.domain + item.key + '-600x1500q80';
 			})
 		}).then(function (images) {
 			config.indexImages = images;
