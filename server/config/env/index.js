@@ -48,10 +48,10 @@ var all = {
       name:'React Native',
       gitUrl:'http://github.com/jackhutu/jackblog-react-native-redux',
       downloadUrl:{
-        android:'http://p.gdown.baidu.com/8ca190e391608bca3f02e1fb4f7aec09072c1c2a552d20c1d2f4f30e5401b7d426a004a72045e9772e2a4eb89ba295cad47cc85278e7323beb2bad42493b055c12ffff4ba28e56a140649994df2732e1466fd0b8e996dd7280c8385c1d99378ff716a82f1a2ef69b665a4674ede243061538926fee90cd0096c4cdd573e5e957b2fffeb32eef4fe45e56e51daccabc3160b8cdec7f963ac90366c8eb424573b6ee2e707fb8826a636fe9df716e722fdd9a514fd72edf4ed97a48af7c155f47dd66ea7e1386df2bb8',
+        android:'http://a.app.qq.com/o/simple.jsp?pkgname=top.jackhu.reactnative',
         ios:''
       },
-      qrcode:'http://upload.jackhu.top/qrcode/jackblog-react-native-qrcode-baidu.jpg'
+      qrcode:'http://upload.jackhu.top/qrcode/jackblog-react-native-qrcode.png'
     }
   ],
   //开启第三方登录
