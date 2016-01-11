@@ -6,7 +6,7 @@ var TagCategory = mongoose.model('TagCategory');
 var Tag = mongoose.model('Tag');
 
 //添加添签分类.
-exports.addTagCat = function (req,res) {
+exports.addTagCat = function (req,res,next) {
 	var catName = req.body.name;
 	if(!catName){
 		return res.status(422).send({error_msg:"标签分类名称不能为空."});
@@ -20,16 +20,16 @@ exports.addTagCat = function (req,res) {
 			});
 		}
 	}).catch(function (err) {
-		return res.status(500).send();	
+		return next(err);
 	})
 }
 
 //获取分类列表
-exports.getTagCatList = function (req,res) {
+exports.getTagCatList = function (req,res,next) {
 	TagCategory.findAsync().then(function(result){
 		return res.status(200).json({data:result});
 	}).catch(function (err) {
-		return res.status(500).send();	
+		return next(err);
 	})
 }
 
@@ -42,12 +42,12 @@ exports.updateTagCat = function (req,res) {
 	TagCategory.findByIdAndUpdateAsync(id,req.body,{new:true}).then(function(result){
 		return res.status(200).json({success:true,cat_id:result._id});
 	}).catch(function(err){
-		return res.status(500).send();	
+		return next(err);
 	});
 }
 //删除分类
 //(如果分类下有标签,则不可删除)
-exports.delTagCat = function (req,res) {
+exports.delTagCat = function (req,res,next) {
 	var id = req.params.id;
 	Tag.findOneAsync({cid:id}).then(function (tag) {
 		if(tag){
@@ -59,12 +59,12 @@ exports.delTagCat = function (req,res) {
 			});
 		}
 	}).catch(function (err) {
-		return res.status(500).send();	
+		return next(err);
 	})
 }
 
 //获取标签列表
-exports.getTagList = function (req,res) {
+exports.getTagList = function (req,res,next) {
 	var cid = req.params.id;
   var condition = {};
   if(cid != 0){
@@ -77,11 +77,11 @@ exports.getTagList = function (req,res) {
   	.exec().then(function (tagList) {
   		return res.status(200).json({data:tagList});
   	}).then(null,function (err) {
-  		return res.status(500).send();
+  		return next(err);
   	});
 }
 //添加标签
-exports.addTag = function (req,res) {
+exports.addTag = function (req,res,next) {
 	//标签名称不能重复,标签分类名称必须有.
 	var cid = req.body.cid;
 	var tagName = req.body.name;
@@ -103,21 +103,21 @@ exports.addTag = function (req,res) {
 			});
 		}
 	}).catch(function (err) {
-		return res.status(500).send();
+		return next(err);
 	});
 }
 
 //删除标签
-exports.deleteTag = function (req,res) {
+exports.deleteTag = function (req,res,next) {
 	var id = req.params.id;
 	return Tag.findByIdAndRemoveAsync(id).then(function() {
 		return res.status(200).json({success:true});
 	}).catch(function (err) {
-		return res.status(500).send();	
+		return next(err);
 	});
 }
 //更新标签
-exports.updateTag = function (req,res) {
+exports.updateTag = function (req,res,next) {
 	var id = req.params.id;
 	if(req.body._id){
 	  delete req.body._id;
@@ -125,15 +125,15 @@ exports.updateTag = function (req,res) {
 	Tag.findByIdAndUpdateAsync(id,req.body,{new:true}).then(function(result){
 		return res.status(200).json({success:true,tag_id:result._id});
 	}).catch(function(err){
-		return res.status(500).send();	
+		return next(err);
 	});
 
 }
 //前台数据
-exports.getFrontTagList = function (req,res) {
+exports.getFrontTagList = function (req,res,next) {
 	Tag.findAsync({is_show:true},{},{sort:{'sort':-1}}).then(function (result) {
 		return res.status(200).json({data:result});
 	}).catch(function (err) {
-		return res.status(500).send();
+		return next(err);
 	});
 }

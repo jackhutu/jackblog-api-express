@@ -14,7 +14,7 @@ var Promise = require("bluebird");
 var tools = require('../../util/tools');
 
 //添加博客
-exports.addArticle = function (req,res) {
+exports.addArticle = function (req,res,next) {
 	var content = req.body.content;
 	var title = req.body.title;
 	var error_msg;
@@ -31,11 +31,11 @@ exports.addArticle = function (req,res) {
 	return Article.createAsync(req.body).then(function (result) {
 		return res.status(200).json({success: true,article_id:result._id});
 	}).catch(function (err) {
-	 	return res.status(500).send();	
+	 	return next(err);
 	});
 }
 //后台获取博客列表
-exports.getArticleList = function (req,res) {
+exports.getArticleList = function (req,res,next) {
 	var currentPage = (parseInt(req.query.currentPage) > 0)?parseInt(req.query.currentPage):1;
 	var itemsPerPage = (parseInt(req.query.itemsPerPage) > 0)?parseInt(req.query.itemsPerPage):10;
 	var startRow = (currentPage - 1) * itemsPerPage;
@@ -55,23 +55,23 @@ exports.getArticleList = function (req,res) {
 				return res.status(200).json({ data: ArticleList, count:count });
 			});
 		}).then(null,function (err) {
-			return res.status(500).send();
+			return next(err);
 		});
 }
 
 //删除博客(连同这篇文章的评论一起删除.)
-exports.destroy = function (req,res) {
+exports.destroy = function (req,res,next) {
 	var id = req.params.id;
 	return Article.findByIdAndRemoveAsync(id).then(function() {
 		return Comment.removeAsync({aid:id}).then(function () {
 			return res.status(200).send({success: true});
 		});
 	}).catch(function (err) {
-		return res.status(500).send();	
+		return next(err);
 	});
 }
 //更新博客
-exports.updateArticle = function (req,res) {
+exports.updateArticle = function (req,res,next) {
 	var id = req.params.id;
 	if(req.body._id){
 	  delete req.body._id;
@@ -97,7 +97,7 @@ exports.updateArticle = function (req,res) {
 	Article.findByIdAndUpdateAsync(id,req.body,{new:true}).then(function(article){
 		return res.status(200).json({success:true,article_id:article._id});
 	}).catch(function(err){
-		return res.status(500).send();	
+		return next(err);
 	});
 }
 //获取单篇博客
@@ -112,7 +112,7 @@ exports.getArticle = function (req,res) {
 		});
 }
 //上传图片
-exports.uploadImage = function (req,res) {
+exports.uploadImage = function (req,res,next) {
 	var file = req.file;
 	if(!file){
 		return res.status(422).send({error_msg:"缺少文件参数."});
@@ -121,7 +121,7 @@ exports.uploadImage = function (req,res) {
 	qiniuHelper.upload(file.path,'blog/article/' + fileName).then(function (result) {
 		return res.status(200).json({success:true,img_url:result.url});
 	}).catch(function (err) {
-		return res.status(500).send();	
+		return next(err);
 	});
 }
 //将网络图片抓取到七牛
@@ -132,7 +132,7 @@ exports.uploadImage = function (req,res) {
  * key: "blog/article/1439948192797e48eb2b310f91bda45273dbbfc1a8e6e.png"
  * url: "http://upload.jackhu.top/blog/article/1439948192797e48eb2b310f91bda45273dbbfc1a8e6e.png"
  */
-exports.fetchImage = function (req,res) {
+exports.fetchImage = function (req,res,next) {
 	if(!req.body.url){
 		return res.status(422).send({error_msg:"url地址不能为空."});
 	}
@@ -148,11 +148,11 @@ exports.fetchImage = function (req,res) {
 	qiniuHelper.fetch(req.body.url,'blog/article/' + fileName).then(function (result) {
 		return res.status(200).json({success:true,img_url:result.url});
 	}).catch(function (err) {
-		return res.status(500).send();	
+		return next(err);
 	});
 }
 //前台获取博客数量
-exports.getFrontArticleCount = function (req,res) {
+exports.getFrontArticleCount = function (req,res,next) {
 	var condition = {status:{$gt:0}};
 	if(req.query.tagId){
 		//tagId = new mongoose.Types.ObjectId(tagId);
@@ -162,11 +162,11 @@ exports.getFrontArticleCount = function (req,res) {
 	Article.countAsync(condition).then(function (count) {
 		return res.status(200).json({success:true,count:count});
 	}).catch(function (err) {
-		return res.status(500).send();
+		return next(err);
 	})
 }
 //前台获取博客列表
-exports.getFrontArticleList = function (req,res) {
+exports.getFrontArticleList = function (req,res,next) {
 	var currentPage = (parseInt(req.query.currentPage) > 0)?parseInt(req.query.currentPage):1;
 	var itemsPerPage = (parseInt(req.query.itemsPerPage) > 0)?parseInt(req.query.itemsPerPage):10;
 	var startRow = (currentPage - 1) * itemsPerPage;
@@ -186,12 +186,12 @@ exports.getFrontArticleList = function (req,res) {
 		.exec().then(function (list) {
 			return res.status(200).json({data:list});
 		}).then(null,function (err) {
-			return res.status(500).send();
+			return next(err);
 		});
 }
 
 //前台获取文章
-exports.getFrontArticle = function (req,res) {
+exports.getFrontArticle = function (req,res,next) {
 	var id = req.params.id;
 	var md = new MarkdownIt({
 		html:true //启用html标记转换
@@ -204,12 +204,12 @@ exports.getFrontArticle = function (req,res) {
 		Article.findByIdAndUpdateAsync(id,{$inc:{visit_count:1}});
 		return res.status(200).json({data:result.info});
 	}).catch(function (err) {
-		return res.status(500).send();	
+		return next(err);
 	});
 
 }
 //前台获取上一篇和下一篇
-exports.getPrenext = function (req,res) {
+exports.getPrenext = function (req,res,next) {
 	var id = req.params.id;
 	var sort = String(req.query.sortName) || "publish_time";
 	var preCondition,nextCondition;
@@ -251,7 +251,7 @@ exports.getPrenext = function (req,res) {
 			return res.status(200).json({data:result});
 		})
 	}).catch(function (err) {
-		return res.status(500).send();
+		return next(err);
 	})
 
 
@@ -278,7 +278,7 @@ exports.getIndexImage = function (req,res) {
 	}
 }
 //用户喜欢
-exports.toggleLike = function (req,res) {
+exports.toggleLike = function (req,res,next) {
 	var aid = new mongoose.Types.ObjectId(req.params.id);
   var userId = req.user._id;
   //如果已经喜欢过了,则从喜欢列表里,去掉文章ID,并减少文章喜欢数.否则添加到喜欢列表,并增加文章喜欢数.	
@@ -302,6 +302,6 @@ exports.toggleLike = function (req,res) {
   		return res.status(200).json({success:true,'count':article.like_count,'isLike':liked});
   	});
   }).catch(function (err) {
-  	return res.status(500).send();
+  	return next(err);
   });
 }

@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var Logs = mongoose.model('Logs');
 var ccap = require('ccap')();
+var config = require('../../config/env')
 /**
  * 获取验证码
  */
@@ -24,7 +25,7 @@ exports.getMe = function (req,res) {
 	});
 }
 //后台获取用户列表
-exports.getUserList = function (req,res) {
+exports.getUserList = function (req,res,next) {
 	var currentPage = (parseInt(req.query.currentPage) > 0)?parseInt(req.query.currentPage):1;
 	var itemsPerPage = (parseInt(req.query.itemsPerPage) > 0)?parseInt(req.query.itemsPerPage):10;
 	var startRow = (currentPage - 1) * itemsPerPage;
@@ -45,7 +46,7 @@ exports.getUserList = function (req,res) {
 				return res.status(200).json({ data: userList, count:count });
 			})
 	}).catch(function (err) {
-		return res.status(500).send();
+		return next(err);
 	})
 
 }
@@ -89,7 +90,7 @@ exports.addUser = function (req,res) {
 }
 
 //删除用户
-exports.destroy = function (req,res) {
+exports.destroy = function (req,res,next) {
 	var userId = req.user._id;
 
 	if(String(userId) === String(req.params.id)){
@@ -103,7 +104,7 @@ exports.destroy = function (req,res) {
 			});
 			return res.status(200).send({success:true});
 		}).catch(function (err) {
-			return res.status(500).send();
+			return next(err);
 		});
 	}
 }
@@ -174,17 +175,8 @@ exports.mdUser = function (req,res,next) {
 	if(error_msg){
 		return res.status(422).send({error_msg:error_msg});
 	}
-	// User.findByIdAndUpdate(req.user._id,{nickname:nickname},{new:true}).then(function (user) {
-	// 	console.log(user.toObject().userInfo);
-	// 	return res.status(200).json({success:true,data:user.toObject().userInfo});
-	// }).catch(function (err) {
-	// 	if(err.errors.nickname){
-	// 		err = {error_msg:err.errors.nickname.message}
-	// 	}
-	// 	return res.status(500).send(err);
-	// });
+
 	var user = req.user;
-	//console.log(user);
 	user.nickname = nickname;
 	user.saveAsync().spread(function (result,number) {
 		return res.status(200).json({success:true,data:result.userInfo});
@@ -201,6 +193,14 @@ exports.getUserProvider = function (req,res,next) {
 	User.findByIdAsync(req.user._id).then(function (user) {
 		return res.status(200).json({data:user.providerInfo});
 	}).catch(function (err) {
-		return res.status(500).send();
+		return next(err);
 	})
+}
+//获取第三方登录列表.
+exports.getSnsLogins = function (req,res,next) {
+	if(config.snsLogins){
+		return res.status(200).json({success:true,data:config.snsLogins});
+	}else{
+		return res.status(404).send();
+	}
 }

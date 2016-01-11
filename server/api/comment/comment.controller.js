@@ -6,7 +6,7 @@ var Comment = mongoose.model('Comment');
 var Blog = mongoose.model('Article');
 
 //添加新的评论.
-exports.addNewComment = function (req,res) {
+exports.addNewComment = function (req,res,next) {
 	var aid = req.body.aid;
 	var content = req.body.content;
 	var userId = req.user._id;
@@ -33,12 +33,12 @@ exports.addNewComment = function (req,res) {
 		Blog.findByIdAndUpdateAsync(aid,{$inc:{comment_count:1}});
 		return res.status(200).json({success:true,data:comment});
 	}).catch(function (err) {
-		return res.status(500).send();
+		return next(err);
 	});
 }
 
 //获取评论列表.
-exports.getFrontCommentList = function (req,res) {
+exports.getFrontCommentList = function (req,res,next) {
 	var aid = req.params.id;
 	Comment.find({aid:aid,status:{$eq:1}})
 	.sort('created')
@@ -49,11 +49,11 @@ exports.getFrontCommentList = function (req,res) {
 	.exec().then(function (commentList) {
 		return res.status(200).json({data:commentList});
 	}).then(null,function (err) {
-		return res.status(500).send();
+		return next(err);
 	});
 }
 //添加回复
-exports.addNewReply = function (req,res) {
+exports.addNewReply = function (req,res,next) {
 	var cid = req.params.id;
 	if(!req.body.content || req.body.content == ''){
 		return res.status(422).send({error_msg:"回复内容不能为空"});
@@ -67,22 +67,22 @@ exports.addNewReply = function (req,res) {
 	Comment.findByIdAndUpdateAsync(cid,{"$push":{"replys":reply}},{new:true}).then(function (result) {
 		return res.status(200).json({success:true,data:result.replys});
 	}).catch(function (err) {
-		return res.status(500).send();
+		return next(err);
 	});
 }
 //删除评论.
-exports.delComment = function (req,res) {
+exports.delComment = function (req,res,next) {
 	var cid = req.params.id;
 	Comment.findByIdAndRemoveAsync(cid).then(function (result) {
 		//评论数-1  
 		Blog.findByIdAndUpdateAsync(result.aid,{$inc:{comment_count:-1}});
 		return res.status(200).json({success:true});
 	}).catch(function (err) {
-		return res.status(500).send();
+		return next(err);
 	})
 }
 //删除回复
-exports.delReply = function (req,res) {
+exports.delReply = function (req,res,next) {
 	var cid = req.params.id;
 	var rid = req.body.rid;
 	if(!rid){
@@ -91,6 +91,6 @@ exports.delReply = function (req,res) {
 	Comment.findByIdAndUpdateAsync(cid,{$pull:{replys:{ _id:mongoose.Types.ObjectId(rid) }}},{new:true}).then(function (result) {
 		return res.status(200).json({success:true,data:result});
 	}).catch(function (err) {
-		return res.status(500).send();
+		return next(err);
 	});
 }

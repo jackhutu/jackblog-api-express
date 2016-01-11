@@ -4,10 +4,8 @@ var _ = require('lodash');
 var mongoose = require('mongoose');
 var Logs = mongoose.model('Logs');
 
-/**
- *  get base settings
- */
-exports.getLogsList = function(req,res){
+
+exports.getLogsList = function(req,res,next){
 
 	var currentPage = (parseInt(req.query.currentPage) > 0)?parseInt(req.query.currentPage):1;
 	var itemsPerPage = (parseInt(req.query.itemsPerPage) > 0)?parseInt(req.query.itemsPerPage):10;
@@ -27,7 +25,7 @@ exports.getLogsList = function(req,res){
 				return res.status(200).send({ data: logsList,count:count });
 			});
 		}).then(null,function (err) {
-			return res.status(500).send();
+			return next(err);
 		});
 
 };

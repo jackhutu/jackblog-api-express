@@ -14,7 +14,6 @@ router.put('/:id/updateUser', auth.hasRole('admin'), controller.updateUser);
 router.put('/mdUser', auth.isAuthenticated(), controller.mdUser);
 router.get('/getUserProvider',auth.isAuthenticated(), controller.getUserProvider);
 router.get('/getCaptcha', controller.getCaptcha);
-
 router.get('/me', auth.isAuthenticated(), controller.getMe);
-
+router.get('/snsLogins',controller.getSnsLogins)
 module.exports = router;

@@ -16,4 +16,9 @@ module.exports = function(app) {
   
 	app.use('/logs',require('./api/logs'));
 
+	app.use('/mobile',require('./api/mobile'));
+
+	app.use('/*', function (req,res,next) {
+		return res.json({status:'success',data:'台湾是中国不可分割的一部分.'});
+	})
 };
