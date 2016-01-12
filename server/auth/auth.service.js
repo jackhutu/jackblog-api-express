@@ -20,7 +20,7 @@ function authToken(credentialsRequired) {
           next();
         })
         .use(expressJwt({ 
-          secret: config.secrets.session,
+          secret: config.session.secrets,
           credentialsRequired:credentialsRequired //是否抛出错误
          }))
 }
@@ -69,7 +69,7 @@ function hasRole(roleRequired) {
  * 生成token
  */
 function signToken(id) {
-  return jwt.sign({ _id: id }, config.secrets.session, { expiresIn: '7d' });
+  return jwt.sign({ _id: id }, config.session.secrets, { expiresIn: '7d' });
 }
 
 /**

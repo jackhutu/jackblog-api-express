@@ -27,11 +27,11 @@ module.exports = function(app) {
   app.use(methodOverride());
   app.use(cookieParser());
   app.use(session({
-    secret: config.secrets.session,
+    secret: config.session.secrets,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     store: new MongoStore({ mongooseConnection: mongoose.connection }),
-    cookie: { maxAge: 60000 }
+    cookie: config.session.cookie
   }));
   app.use(passport.initialize());
 

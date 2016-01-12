@@ -19,6 +19,7 @@ router
     },function (err, user, redirectURL){
       var redirectUrl = req.session.passport.redirectUrl || '/';
       var snsmsg = {};
+      var cookieDomain = config.session.cookie.domain || null;
       if (err) {
         snsmsg.msg = err.message;
         snsmsg.msgtype = 'error';
@@ -29,9 +30,9 @@ router
         snsmsg.msgtype = 'success';
         snsmsg.msg  = '登录成功,欢迎光临!';
         var token = auth.signToken(user._id);
-        res.cookie('token', JSON.stringify(token));
+        res.cookie('token', JSON.stringify(token),{domain:cookieDomain});
       }
-      res.cookie('snsmsg',JSON.stringify(snsmsg),{maxAge:30000});
+      res.cookie('snsmsg',JSON.stringify(snsmsg),{domain:cookieDomain, maxAge:30000});
       return res.redirect(redirectUrl);
     })(req, res, next);
   });
