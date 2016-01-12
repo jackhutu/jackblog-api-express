@@ -6,5 +6,8 @@ module.exports = {
   mongo: {
     uri: 'mongodb://localhost/jackblog-dev'
   },
-  seedDB: true
+  seedDB: true,
+  session:{
+    cookie:  {maxAge: 60000*5}
+  }
 };

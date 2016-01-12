@@ -18,7 +18,6 @@ var all = {
   seedDB: false,
   session:{
     secrets: 'jackblog-secret',
-    cookie:  {}
   },
   userRoles: ['user', 'admin'],
   qiniu:{
