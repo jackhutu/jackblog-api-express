@@ -2,6 +2,7 @@
 
 var express = require('express');
 var passport = require('passport');
+var config = require('../../config/env');
 var auth = require('../auth.service');
 var router = express.Router();
 
