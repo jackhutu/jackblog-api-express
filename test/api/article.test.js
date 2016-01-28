@@ -1,10 +1,12 @@
+'use strict';
+
 var app = require('../../server/app');
 var request = require('supertest')(app);
 var should = require("should"); 
-var mongoose = require('mongoose'),
-	User = mongoose.model('User'),
-	Article = mongoose.model('Article')
-	Logs = mongoose.model('Logs');
+var mongoose = require('mongoose');
+var	User = mongoose.model('User');
+var	Article = mongoose.model('Article');
+var	Logs = mongoose.model('Logs');
 var Promise = require('bluebird');
 var qiniuHelper = require('../../server/util/qiniu');
 var sinon = require('sinon');
@@ -459,7 +461,6 @@ describe('test/api/article.test.js',function () {
 			request.del('/article/ddddddd')
 			.set('Authorization', 'Bearer ' + token)
 			.expect(500,done);
-
 		});
 
 		it('should return success',function (done) {

@@ -1,11 +1,13 @@
+'use strict';
+
 var app = require('../../server/app');
 var request = require('supertest')(app);
 var should = require("should"); 
-var mongoose = require('mongoose'),
-	User = mongoose.model('User'),
-	Article = mongoose.model('Article'),
-	Comment = mongoose.model('Comment'),
-	Logs = mongoose.model('Logs');
+var mongoose = require('mongoose');
+var	User = mongoose.model('User');
+var	Article = mongoose.model('Article');
+var	Comment = mongoose.model('Comment');
+var	Logs = mongoose.model('Logs');
 
 describe('test/api/comment.test.js',function () {
 	//测试需要一篇文章,和这篇文章的评论.

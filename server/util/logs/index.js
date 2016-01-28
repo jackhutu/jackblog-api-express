@@ -2,9 +2,9 @@
 
 var path = require('path');
 var bunyan = require('bunyan');
+var config = require('../../config/env');
 
-
-var logger = bunyan.createLogger({
+var bunyanConfig = {
 	name: 'hutublog',
 	serializers: {
 	 req: bunyan.stdSerializers.req,
@@ -15,8 +15,6 @@ var logger = bunyan.createLogger({
 		{
 			level: 'info',
 			stream: process.stdout
-			//path: 'logs/info.log',
-			//path: path.join(__dirname,'../../logs/' + process.env.NODE_ENV + '-' +'info.log')
 		},{
 			level: 'trace',
 			stream: process.stdout
@@ -25,19 +23,13 @@ var logger = bunyan.createLogger({
 			level: 'debug',
 			stream: process.stderr
 		},{
+			type: 'rotating-file',
 			level: 'error',
-			path: 'logs/bunyan-' + process.env.NODE_ENV + '-' +'error.log'
-			//path: path.join(__dirname,'../../logs/' + process.env.NODE_ENV + '-' +'error.log')
-		},{
-			level:'fatal',
-			path: 'logs/bunyan-' + process.env.NODE_ENV + '-' +'fatal.log'
-			//path: path.join(__dirname,'../../logs/' + process.env.NODE_ENV + '-' +'fatal.log')
-		},{
-			level: 'warn',
-			path: 'logs/bunyan-' + process.env.NODE_ENV + '-' +'warn.log',
-			//path: path.join(__dirname,'../../logs/' + process.env.NODE_ENV + '-' +'warn.log')
+			path: path.join(config.root,'logs/' + config.env + '-' +'error.log'),
+			period: '1d',   // daily rotation
+			count: 7        // keep 7 back copies
 		}
 	]
-});
+}
 
-module.exports = logger;
+module.exports = bunyan.createLogger(bunyanConfig);

@@ -30,7 +30,6 @@ if ('development' === config.env) {
   app.use(errorHandler());
 }else{
 	app.use(function (err, req, res, next) {
-	  console.error('server 500 error:', err);
 	  return res.status(500).send();
 	});
 }

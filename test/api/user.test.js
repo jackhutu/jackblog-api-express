@@ -1,3 +1,5 @@
+'use strict';
+
 var app = require('../../server/app');
 var request = require('supertest')(app);
 var should = require("should"); 
@@ -295,6 +297,13 @@ describe('test/api/user.test.js',function () {
 	describe('get /users/getCaptcha', function() {
 		it('should return captcha image', function(done) {
 			request.get('/users/getCaptcha')
+			.expect(200,done);
+		});
+	});
+
+	describe('get /users/snsLogins', function() {
+		it('should return status 200', function(done) {
+			request.get('/users/snsLogins')
 			.expect(200,done);
 		});
 	});
