@@ -20,6 +20,11 @@ Jackblog 是使用 Node.js 和 MongoDB 开发的个人博客系统,前后端分�
 移动端有:   
 [react native 版](https://github.com/jackhutu/jackblog-react-native-redux)
 
+## 环境准备
+```
+node.js 4.0+
+mognodb 3.0+
+```
 
 ## 开发
 ```
