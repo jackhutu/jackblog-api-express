@@ -1,20 +1,30 @@
+sudo: false
+
 language: node_js
-node_js:
-  - "4"
-services:
-  - mongodb
-compiler: clang-3.6
+
 env:
-  - CXX=clang-3.6
+  - CXX=g++-4.8
+
+node_js:
+  - '4'
+  - stable
+
 addons:
   apt:
     sources:
-      - llvm-toolchain-precise-3.6
-      - ubuntu-toolchain-r-test
+    - ubuntu-toolchain-r-test
     packages:
-      - clang-3.6
-      - g++-4.8
+    - g++-4.8
+
+services:
+  - mongodb
+
+before_install:
+  - $CXX --version
+
 before_script:
   - npm install -g gulp
+
 script: gulp test
+
 after_script: gulp coveralls
