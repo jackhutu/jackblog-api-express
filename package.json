@@ -1,7 +1,7 @@
 {
-  "name": "jackblog-api-es5",
-  "version": "1.1.0",
-  "description": "jackblog API es5版",
+  "name": "jackblog-api-express",
+  "version": "1.2.1",
+  "description": "Jackblog API Express版",
   "main": "server/app.js",
   "scripts": {
     "test": "gulp test",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jackhutu/jackblog-api-es5.git"
+    "url": "git+https://github.com/jackhutu/jackblog-api-express.git"
   },
   "keywords": [
     "jackblog"
@@ -19,9 +19,9 @@
   "author": "Jack Hu",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jackhutu/jackblog-api-es5/issues"
+    "url": "https://github.com/jackhutu/jackblog-api-express/issues"
   },
-  "homepage": "https://github.com/jackhutu/jackblog-api-es5#readme",
+  "homepage": "https://github.com/jackhutu/jackblog-api-express#readme",
   "dependencies": {
     "bluebird": "^2.10.2",
     "body-parser": "^1.14.1",
