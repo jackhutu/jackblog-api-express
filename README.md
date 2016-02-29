@@ -27,6 +27,19 @@ node.js 4.0+
 mognodb 3.0+
 ```
 
+## 配置
+* 配置文件路径: ./server/config/env, 可将私有配置放入./server/config/env/private 下.
+* [七牛云存储配置](https://portal.qiniu.com/signup?code=3lg7fovhjx2ky)  
+
+```
+  qiniu:{
+    app_key:"app_key",
+    app_secret:"app_secret",
+    domain:"domain",          //七牛配置域名
+    bucket:"bucket"           //七牛空间名称  
+  },
+```
+
 ## 开发
 ```
 $ npm install
