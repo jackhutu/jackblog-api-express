@@ -18,6 +18,7 @@ addons:
 
 services:
   - mongodb
+  - redis-server
 
 before_install:
   - $CXX --version

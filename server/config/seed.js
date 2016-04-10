@@ -4,15 +4,15 @@
 
 'use strict';
 
-var mongoose = require('mongoose'),
-	User = mongoose.model('User'),
-	Article = mongoose.model('Article'),
-	TagCategory = mongoose.model('TagCategory'),
-	Tag = mongoose.model('Tag');
+var mongoose = require('mongoose');
+var	User = mongoose.model('User');
+var	Article = mongoose.model('Article');
+var	TagCategory = mongoose.model('TagCategory');
+var	Tag = mongoose.model('Tag');
 var Promise = require('bluebird');
 
 	//初始化标签,文章,用户
-	if(process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'){
+	if(process.env.NODE_ENV === 'development'){
 		User.countAsync().then(function (count) {
 			 if(count === 0){
 			 	User.removeAsync().then(function () {

@@ -10,41 +10,37 @@ var	Logs = mongoose.model('Logs');
 var Promise = require('bluebird');
 var qiniuHelper = require('../../server/util/qiniu');
 var sinon = require('sinon');
+var authHelper = require('../middlewares/authHelper');
+var redis = require('../../server/util/redis');
 
 describe('test/api/article.test.js',function () {
 	//测试需要一篇文章
 	var token, mockArticleId,mockAdminId;
 	var mockTagId = '55e127401cfddd2c4be93f6b';
 	var mockTagIds = ['55e127401cfddd2c4be93f6b'];
-		before(function (done) {
-			User.createAsync({
-				nickname:'测试' + new Date().getTime(),
-				email:'test' + new Date().getTime() + '@tets.com',
-				password:'test',
-				role:'admin',
-				status:1
-			}).then(function (user) {
-				mockAdminId = user._id;
-				request.post('/auth/local')        
-				.send({
-	          email: user.email,
-	          password: 'test'
-	       })
-				.end(function (err,res) {
-					token = res.body.token;
-					done();
-				})
-			});
+	before(function (done) {
+		authHelper.createUser('admin').then(function (user) {
+		  mockAdminId = user._id;
+		  return user;
+		}).then(function (user) {
+		  authHelper.getToken(request, user.email).then(function (result) {
+		    token = result;
+		    done();
+		  });
+		}).catch(function (err) {
+		  console.log(err);
 		});
+	});
 
-		after(function (done) {
-			User.findByIdAndRemoveAsync(mockAdminId).then(function () {
-				Logs.removeAsync();
-				done();
-			}).catch(function (err) {
-				done(err);
-			});
+	after(function (done) {
+		User.findByIdAndRemoveAsync(mockAdminId).then(function () {
+			Logs.removeAsync();
+			redis.del('indexImages');
+			done();
+		}).catch(function (err) {
+			done(err);
 		});
+	});
 
 	describe('post /article/addArticle',function () {
 		it('should not title return error',function (done) {
@@ -349,8 +345,6 @@ describe('test/api/article.test.js',function () {
 		});
 	});
 
-
-
 	describe('get /article/getIndexImage',function () {
 		var stubQiniu;
 		beforeEach(function () {
@@ -361,9 +355,7 @@ describe('test/api/article.test.js',function () {
 		});
 
 		it('should return index image',function (done) {
-			stubQiniu.returns(Promise.resolve({items:[{
-				key:'aaaabbbbdddddcccc'
-			}]}));
+			stubQiniu.returns(Promise.resolve({items:[1, 2, 3, 4, 5].map(i=>({key:i}))}));
 			request.get('/article/getIndexImage')
 			.expect(200)
 			.end(function (err,res) {
@@ -375,6 +367,17 @@ describe('test/api/article.test.js',function () {
 			});
 		});
 		
+		it('should return redis image',function (done) {
+			request.get('/article/getIndexImage')
+			.expect(200)
+			.end(function (err,res) {
+				if (err) return done(err);
+				res.body.success.should.be.true();
+				res.body.img.should.be.String;
+				done();
+			});
+		});
+
 	});
 
 	describe('get /article/:id/getPrenext', function() {

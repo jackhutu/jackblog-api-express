@@ -8,38 +8,30 @@ var	User = mongoose.model('User');
 var	Article = mongoose.model('Article');
 var	Comment = mongoose.model('Comment');
 var	Logs = mongoose.model('Logs');
+var authHelper = require('../middlewares/authHelper');
 
 describe('test/api/comment.test.js',function () {
 	//测试需要一篇文章,和这篇文章的评论.
 	var token, mockUserId,mockArticleId, mockCommentId,mockReplyId;
 	before(function (done) {
-		User.createAsync({
-			nickname:'测试' + new Date().getTime(),
-			email:'test' + new Date().getTime() + '@tets.com',
-			password:'test',
-			role:'admin',
-			status:1
+		authHelper.createUser('admin').then(function (user) {
+		  mockUserId = user._id;
+		  return Article.createAsync({
+		  	author_id:user._id,
+		  	title:'第' + new Date().getTime() + '篇文章',
+		  	content:'<p>我第n次爱你.</p>',
+		  	status:1
+		  }).then(function (article) {
+		  	mockArticleId = article._id;
+		  	return user;
+		  });
 		}).then(function (user) {
-			mockUserId = user._id;
-			return Article.createAsync({
-				author_id:user._id,
-				title:'第' + new Date().getTime() + '篇文章',
-				content:'<p>我第n次爱你.</p>',
-				status:1
-			}).then(function (article) {
-				mockArticleId = article._id;
-				return user;
-			});
-		}).then(function (user) {
-			request.post('/auth/local')        
-			.send({
-          email: user.email,
-          password: 'test'
-       })
-			.end(function (err,res) {
-				token = res.body.token;
-				done();
-			});
+		  authHelper.getToken(request, user.email).then(function (result) {
+		    token = result;
+		    done();
+		  });
+		}).catch(function (err) {
+		  console.log(err);
 		});
 	});
 

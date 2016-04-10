@@ -10,11 +10,10 @@ var path = require('path');
 var config = require('./env');
 var passport = require('passport');
 var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
+var RedisStore = require('connect-redis')(session);
 var mongoose = require('mongoose');
 
 module.exports = function(app) {
-
   app.enable('trust proxy');
   var options = {
     origin: true,
@@ -30,9 +29,12 @@ module.exports = function(app) {
     secret: config.session.secrets,
     resave: false,
     saveUninitialized: false,
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    store: new RedisStore({
+      host:config.redis.host,
+      port:config.redis.port,
+      pass:config.redis.password || ''
+    }),
     cookie: config.session.cookie
   }));
   app.use(passport.initialize());
-
 };

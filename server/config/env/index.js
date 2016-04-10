@@ -8,6 +8,7 @@ var all = {
   env: process.env.NODE_ENV,
   root: path.normalize(__dirname + '/../../..'),
   port: process.env.PORT || 9000,
+  //mongodb配置
   mongo: {
     options: {
       db: {
@@ -15,11 +16,19 @@ var all = {
       }
     }
   },
+  //redis 配置
+  redis: {
+    host: '127.0.0.1',
+    port: 6379
+  },
+  //是否初始化数据
   seedDB: false,
   session:{
     secrets: 'jackblog-secret',
   },
+  //用户角色种类
   userRoles: ['user', 'admin'],
+  //七牛配置
   qiniu:{
     app_key:"app_key",
     app_secret:"app_secret",
@@ -28,6 +37,7 @@ var all = {
   },
   //默认首页图片.
   defaultIndexImage:"http://upload.jackhu.top/blog/index/8x7hVJvpE3Z6ruwgtd2G.jpg",
+  //第三方登录配置
   github:{
     clientID:"github",
     clientSecret:"clientSecret",
@@ -43,6 +53,7 @@ var all = {
     clientSecret:"clientSecret",
     callbackURL:"/auth/qq/callback"
   },
+  //移动APP列表
   apps:[
     {
       name:'React Native',

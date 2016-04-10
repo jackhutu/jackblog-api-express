@@ -7,7 +7,6 @@ exports.paths = {
   istanbul: 'test_coverage',
   server:'server'
 };
-
 /**
  *  错误处理
  */

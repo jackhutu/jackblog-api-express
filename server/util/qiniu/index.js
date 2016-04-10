@@ -37,7 +37,7 @@ var bucket = config.qiniu.bucket;
 exports.bucket = bucket;
 //将网络图片上传到七牛服务器
 exports.fetch = function (url,key) {
-	return this.fetchFile(url,bucket,key).spread(function (result,response) {
+	return this.fetchFile(url,bucket,key).then(function (result) {
 		result.url = config.qiniu.domain + result.key;
 		return result;
 	});
@@ -47,7 +47,7 @@ exports.fetch = function (url,key) {
 exports.upload = function (path,key) {
 	var extra = new qiniu.io.PutExtra();
 	var uptoken = getUptoken(config.qiniu.bucket);
-	return this.uploadFile(uptoken, key, path, extra).spread(function(result,response){
+	return this.uploadFile(uptoken, key, path, extra).then(function(result){
 		result.url = config.qiniu.domain + result.key;
     return result;
   });
@@ -57,7 +57,7 @@ exports.upload = function (path,key) {
 exports.move = function(keySrc,keyDest){
 	var bucketSrc,bucketDest;
 	bucketSrc = bucketDest = bucket;
-  return this.moveFile(bucketSrc, keySrc, bucketDest, keyDest).spread(function (result,response) {
+  return this.moveFile(bucketSrc, keySrc, bucketDest, keyDest).then(function (result) {
   	return result;
   });
 };
@@ -65,13 +65,13 @@ exports.move = function(keySrc,keyDest){
 exports.copy = function(keySrc,keyDest){
 	var bucketSrc,bucketDest;
 	bucketSrc = bucketDest = bucket;
-  return this.copyFile(bucketSrc, keySrc, bucketDest, keyDest).spread(function (result,response) {
+  return this.copyFile(bucketSrc, keySrc, bucketDest, keyDest).then(function (result) {
   	return result;
   });
 };
 
 exports.remove = function(key){
-	return this.removeFile(bucket,key).spread(function (result,response) {
+	return this.removeFile(bucket,key).then(function (result) {
 		return result;
 	})
 };
@@ -81,9 +81,7 @@ prefix 想要查询的资源前缀缺省值为空字符串,limit 限制条数缺
 marker 上一次列举返回的位置标记，作为本次列举的起点信息。缺省值为空字符串
  */
 exports.list = function(prefix, marker, limit){
-  return this.allList(bucket, prefix, marker, limit).spread(function(result,response){
+  return this.allList(bucket, prefix, marker, limit).then(function(result){
     return result;
   })
 };
-
-

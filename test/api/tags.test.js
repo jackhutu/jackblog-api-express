@@ -8,27 +8,21 @@ var User = mongoose.model('User');
 var TagCategory = mongoose.model('TagCategory');
 var Tag = mongoose.model('Tag');
 var Logs = mongoose.model('Logs');
+var authHelper = require('../middlewares/authHelper');
 
 describe('test/api/tags.test.js',function () {
 	var token, mockUserId,mockTagCatId,mockTagId;
 	before(function (done) {
-		User.createAsync({
-			nickname:'测试' + new Date().getTime(),
-			email:'test' + new Date().getTime() + '@tets.com',
-			password:'test',
-			role:'admin',
-			status:1
+		authHelper.createUser('admin').then(function (user) {
+		  mockUserId = user._id;
+		  return user;
 		}).then(function (user) {
-			mockUserId = user._id;
-			request.post('/auth/local')        
-			.send({
-          email: user.email,
-          password: 'test'
-       })
-			.end(function (err,res) {
-				token = res.body.token;
-				done();
-			})
+		  authHelper.getToken(request, user.email).then(function (result) {
+		    token = result;
+		    done();
+		  });
+		}).catch(function (err) {
+		  console.log(err);
 		});
 	});
 

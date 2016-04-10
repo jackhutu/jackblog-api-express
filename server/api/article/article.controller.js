@@ -12,6 +12,7 @@ var MarkdownIt = require('markdown-it');
 var config = require('../../config/env');
 var Promise = require("bluebird");
 var tools = require('../../util/tools');
+var redis = require('../../util/redis');
 
 //添加博客
 exports.addArticle = function (req,res,next) {
@@ -253,30 +254,31 @@ exports.getPrenext = function (req,res,next) {
 	}).catch(function (err) {
 		return next(err);
 	})
-
-
 }
+
 //获取首页图片
-exports.getIndexImage = function (req,res) {
-	//直接从七牛获取会很慢,改为从配置数组中获取.
-	if(!config.indexImages || config.indexImages.length < 1){
-		res.status(200).json({success:true,img:config.defaultIndexImage});
-		qiniuHelper.list('blog/index','',10).then(function(result){
-			return Promise.map(result.items,function (item) {
-				return config.qiniu.domain + item.key + '-600x1500q80';
-			})
-		}).then(function (images) {
-			config.indexImages = images;
-		}).catch(function (err) {
-			config.indexImages = [];
-		});
-		return;
-	}else{
-		var images = config.indexImages;
-		var index = _.random(images.length - 1);
-		return res.status(200).json({success:true,img:images[index]});
-	}
+exports.getIndexImage = function (req,res,next) {
+	//使用redis缓存图片列表.
+	redis.llen('indexImages').then(function (imagesCount) {
+		if(imagesCount < 1){
+			res.status(200).json({success:true,img:config.defaultIndexImage});
+			return qiniuHelper.list('blog/index','',30).then(function(result){
+				return Promise.map(result.items,function (item) {
+					return redis.lpush('indexImages',config.qiniu.domain + item.key + '-600x1500q80');
+				});
+			});
+		}else{
+			return redis.lrange('indexImages', 0, 30).then(function (images) {
+				var index = _.random(images.length - 1);
+				return res.status(200).json({success:true,img:images[index]});
+			});
+		}
+	}).catch(function (err) {
+		redis.del('indexImages');
+		return next(err);
+	});
 }
+
 //用户喜欢
 exports.toggleLike = function (req,res,next) {
 	var aid = new mongoose.Types.ObjectId(req.params.id);

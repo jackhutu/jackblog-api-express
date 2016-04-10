@@ -74,7 +74,8 @@ exports.addUser = function (req,res) {
 
   var newUser = new User(req.body);
   newUser.role = 'user';
-  newUser.saveAsync().spread(function(user,number) {
+
+  newUser.saveAsync().then(function(user) {
 		Logs.create({
 			uid:req.user._id,
 			content:"创建新用户 "+ (user.email || user.nickname),
@@ -82,7 +83,7 @@ exports.addUser = function (req,res) {
 		});
 		return res.status(200).json({success:true,user_id:user._id});
 	}).catch(function (err) {
-		if(err.errors.nickname){
+		if(err.errors && err.errors.nickname){
 			err = {error_msg:err.errors.nickname.message}
 		}
 		return res.status(500).send(err);
@@ -141,7 +142,7 @@ exports.updateUser = function (req,res) {
   		if(req.body.newPassword){
   			user.password = req.body.newPassword;
   		}
-  		return user.saveAsync().spread(function (user,number) {
+  		return user.saveAsync().then(function (user) {
   				Logs.create({
   					email:req.user._id,
   					content:"编辑用户"+ (user.email || user.nickname),
@@ -178,7 +179,7 @@ exports.mdUser = function (req,res,next) {
 
 	var user = req.user;
 	user.nickname = nickname;
-	user.saveAsync().spread(function (result,number) {
+	user.saveAsync().then(function (result) {
 		return res.status(200).json({success:true,data:result.userInfo});
 	}).catch(function (err) {
 		if(err.errors.nickname){

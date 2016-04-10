@@ -6,18 +6,13 @@ var should = require("should");
 var mongoose = require('mongoose');
 var	User = mongoose.model('User');
 var	Logs = mongoose.model('Logs');
+var authHelper = require('../middlewares/authHelper');
 
 describe('test/api/logs.test.js',function () {
 	//测试需要一篇文章,和这篇文章的评论.
 	var token, mockLogId,mockUserId;
 	before(function (done) {
-		User.createAsync({
-			nickname:'测试' + new Date().getTime(),
-			email:'test' + new Date().getTime() + '@tets.com',
-			password:'test',
-			role:'admin',
-			status:1
-		}).then(function (user) {
+		authHelper.createUser('admin').then(function (user) {
 			mockUserId = user._id;
 			return Logs.createAsync({
 				content:'删除用户.',
@@ -32,17 +27,13 @@ describe('test/api/logs.test.js',function () {
 				return user;
 			});
 		}).then(function (user) {
-			request.post('/auth/local')        
-			.send({
-          email: user.email,
-          password: 'test'
-       })
-			.end(function (err,res) {
-				token = res.body.token;
-				done();
-			})
+		  authHelper.getToken(request, user.email).then(function (result) {
+		    token = result;
+		    done();
+		  });
+		}).catch(function (err) {
+		  console.log(err);
 		});
-
 	});
 
 	after(function (done) {
