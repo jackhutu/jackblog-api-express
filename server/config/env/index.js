@@ -30,10 +30,10 @@ var all = {
   userRoles: ['user', 'admin'],
   //七牛配置
   qiniu:{
-    app_key:"app_key",
-    app_secret:"app_secret",
-    domain:"domain",          //七牛配置域名
-    bucket:"bucket"           //七牛空间名称  
+    app_key:'',
+    app_secret:'',
+    domain:'',          //七牛配置域名
+    bucket:''           //七牛空间名称  
   },
   //默认首页图片.
   defaultIndexImage:"http://upload.jackhu.top/blog/index/8x7hVJvpE3Z6ruwgtd2G.jpg",

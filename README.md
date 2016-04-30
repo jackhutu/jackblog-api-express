@@ -37,7 +37,7 @@ redis 2.8+
     bucket:"bucket"           //七牛空间名称  
   },
 ```
-
+* 七牛不配置也可以运行, 但如果使用[后台管理功能 https://github.com/jackhutu/jackblog-admin](https://github.com/jackhutu/jackblog-admin), 必须配置七牛.
 
 ## 开发
 ```
@@ -46,6 +46,21 @@ $ cd jackblog-api-express
 $ npm install
 $ gulp serve
 ```
+
+## [windows 用户注意事项](#windows)
+经亲测windows上开发没有任何问题, 测试环境如下:
+- windows 7 64位
+- mongodb 3.2.6
+- [redis 2.8.24](https://github.com/MSOpenTech/redis/releases)
+- Python 2.7
+- Microsoft Visual Studio C++ 2013
+
+1, node-gyp  
+一定要全局安装好node-gyp, ```npm i -g node-gyp```  
+这个库依赖python 2.7, vs2013. c++编译环境一定要配置好, 不然很多包都装不了.
+
+2, redis  
+redis for windows 只支持64位的操作系统 
 
 ## 线上布署
 ```

@@ -262,11 +262,14 @@ exports.getIndexImage = function (req,res,next) {
 	redis.llen('indexImages').then(function (imagesCount) {
 		if(imagesCount < 1){
 			res.status(200).json({success:true,img:config.defaultIndexImage});
-			return qiniuHelper.list('blog/index','',30).then(function(result){
-				return Promise.map(result.items,function (item) {
-					return redis.lpush('indexImages',config.qiniu.domain + item.key + '-600x1500q80');
+			if(config.qiniu.app_key !== '' && config.qiniu.app_secret !== ''){
+				return qiniuHelper.list('blog/index','',30).then(function(result){
+					return Promise.map(result.items,function (item) {
+						return redis.lpush('indexImages',config.qiniu.domain + item.key + '-600x1500q80');
+					});
 				});
-			});
+			}
+			return;
 		}else{
 			return redis.lrange('indexImages', 0, 30).then(function (images) {
 				var index = _.random(images.length - 1);

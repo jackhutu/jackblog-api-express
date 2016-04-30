@@ -7,11 +7,10 @@ var cors = require('cors');
 var methodOverride = require('method-override');
 var cookieParser = require('cookie-parser');
 var path = require('path');
-var config = require('./env');
 var passport = require('passport');
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
-var mongoose = require('mongoose');
+var config = require('./env');
 
 module.exports = function(app) {
   app.enable('trust proxy');
