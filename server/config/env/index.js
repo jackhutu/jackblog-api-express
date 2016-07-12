@@ -63,6 +63,15 @@ var all = {
         ios:''
       },
       qrcode:'http://upload.jackhu.top/qrcode/jackblog-react-native-qrcode.png'
+    },
+    {
+      name:'Ionic 2.0',
+      gitUrl:'http://github.com/jackhutu/jackblog-ionic2',
+      downloadUrl:{
+        android:'http://upload.jackhu.top/downloads/Jackblog-ionic2-1.0.0.apk',
+        ios:''
+      },
+      qrcode:'http://upload.jackhu.top/qrcode/jackblog-ionic2-v1.0.0.png'
     }
   ],
   //开启第三方登录

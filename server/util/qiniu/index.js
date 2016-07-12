@@ -11,13 +11,13 @@ qiniu.conf.SECRET_KEY = config.qiniu.app_secret;
 var client = new qiniu.rs.Client();
 
 //对一般操作进行promise封装
-var uploadFile = Promise.promisify(qiniu.io.putFile, qiniu.io);
+var uploadFile = Promise.promisify(qiniu.io.putFile);
 var moveFile = Promise.promisify(client.move, client);
 var copyFile = Promise.promisify(client.copy, client);
 var removeFile = Promise.promisify(client.remove, client);
 var statFile = Promise.promisify(client.stat, client);
 var fetchFile = Promise.promisify(client.fetch, client);
-var allList = Promise.promisify(qiniu.rsf.listPrefix, qiniu.ref);
+var allList = Promise.promisify(qiniu.rsf.listPrefix);
 
 exports.uploadFile = uploadFile;
 exports.moveFile = moveFile;
@@ -79,9 +79,11 @@ exports.remove = function(key){
 列出所有资源,
 prefix 想要查询的资源前缀缺省值为空字符串,limit 限制条数缺省值为1000	
 marker 上一次列举返回的位置标记，作为本次列举的起点信息。缺省值为空字符串
+delimiter 指定目录分隔符，列出所有公共前缀（模拟列出目录效果）。默认值为空字符串。
  */
-exports.list = function(prefix, marker, limit){
-  return this.allList(bucket, prefix, marker, limit).then(function(result){
+exports.list = function(prefix, marker, limit, delimiter){
+  var delimiter = delimiter || '';
+  return this.allList(bucket, prefix, marker, limit, delimiter).then(function(result){
     return result;
   })
 };
