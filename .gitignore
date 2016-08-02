@@ -13,3 +13,4 @@ uploads
 node_modules
 test_coverage
 private
+.idea/
