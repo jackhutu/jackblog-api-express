@@ -14,7 +14,7 @@ var User = mongoose.model('User');
 function authToken(credentialsRequired) {
   return compose()
         .use(function(req, res, next) {
-          if(req.query && req.query.hasOwnProperty('access_token')) {
+          if(req.query && req.query.access_token) {
             req.headers.authorization = 'Bearer ' + req.query.access_token;
           }
           next();

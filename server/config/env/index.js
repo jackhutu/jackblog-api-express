@@ -11,15 +11,15 @@ var all = {
   //mongodb配置
   mongo: {
     options: {
-      db: {
-        safe: true
-      }
+      user: process.env.MONGO_USERNAME || '', 
+      pass: process.env.MONGO_PASSWORD || ''
     }
   },
   //redis 配置
   redis: {
-    host: '127.0.0.1',
-    port: 6379
+    host: process.env.REDIS_PORT_6379_TCP_ADDR || '127.0.0.1',
+    port: process.env.REDIS_PORT_6379_TCP_PORT || 6379,
+    password: process.env.REDIS_PASSWORD || ''
   },
   //是否初始化数据
   seedDB: false,
@@ -30,48 +30,48 @@ var all = {
   userRoles: ['user', 'admin'],
   //七牛配置
   qiniu:{
-    app_key:'',
-    app_secret:'',
-    domain:'',          //七牛配置域名
-    bucket:''           //七牛空间名称  
+    app_key: process.env.QINIU_APP_KEY || '',
+    app_secret: process.env.QINIU_APP_SECRET || '',
+    domain: process.env.QINIU_APP_DOMAIN || '',          //七牛配置域名
+    bucket: process.env.QINIU_APP_BUCKET || ''           //七牛空间名称  
   },
   //默认首页图片.
-  defaultIndexImage:"http://upload.jackhu.top/blog/index/8x7hVJvpE3Z6ruwgtd2G.jpg",
+  defaultIndexImage: 'https://upload.jackhu.top/blog/index/default.jpg-600x1500q80',
   //第三方登录配置
   github:{
-    clientID:"github",
-    clientSecret:"clientSecret",
-    callback:"/auth/github/callback"
+    clientID: process.env.GITHUB_CLIENT_ID || 'clientID',
+    clientSecret: process.env.GITHUB_CLIENT_SECRET || 'clientSecret',
+    callbackURL: process.env.GITHUB_CALLBACK_URL || '',
   },
   weibo:{
-    clientID:"clientID",
-    clientSecret:"clientSecret",
-    callbackURL:"/auth/weibo/callback"
+    clientID: process.env.WEIBO_CLIENT_ID || 'clientID',
+    clientSecret: process.env.WEIBO_CLIENT_SECRET || 'clientSecret',
+    callbackURL: process.env.WEIBO_CALLBACK_URL || '',
   },
   qq:{
-    clientID:"clientID",
-    clientSecret:"clientSecret",
-    callbackURL:"/auth/qq/callback"
+    clientID: process.env.QQ_CLIENT_ID || 'clientID',
+    clientSecret: process.env.QQ_CLIENT_SECRET || 'clientSecret',
+    callbackURL: process.env.QQ_CALLBACK_URL || '',
   },
   //移动APP列表
   apps:[
     {
       name:'React Native',
-      gitUrl:'http://github.com/jackhutu/jackblog-react-native-redux',
+      gitUrl:'//github.com/jackhutu/jackblog-react-native-redux',
       downloadUrl:{
-        android:'http://a.app.qq.com/o/simple.jsp?pkgname=top.jackhu.reactnative',
+        android:'//a.app.qq.com/o/simple.jsp?pkgname=top.jackhu.reactnative',
         ios:''
       },
-      qrcode:'http://upload.jackhu.top/qrcode/jackblog-react-native-qrcode.png'
+      qrcode:'https://upload.jackhu.top/qrcode/jackblog-react-native-qrcode.png'
     },
     {
       name:'Ionic 2.0',
-      gitUrl:'http://github.com/jackhutu/jackblog-ionic2',
+      gitUrl:'//github.com/jackhutu/jackblog-ionic2',
       downloadUrl:{
-        android:'http://upload.jackhu.top/downloads/Jackblog-ionic2-1.0.0.apk',
+        android:'https://upload.jackhu.top/downloads/Jackblog-ionic2-1.0.0.apk',
         ios:''
       },
-      qrcode:'http://upload.jackhu.top/qrcode/jackblog-ionic2-v1.0.0.png'
+      qrcode:'https://upload.jackhu.top/qrcode/jackblog-ionic2-v1.0.0.png'
     }
   ],
   //开启第三方登录
@@ -79,8 +79,4 @@ var all = {
 };
 
 var config = _.merge(all,require('./' + process.env.NODE_ENV + '.js') || {});
-//加载私有配置
-if (fs.existsSync(path.join(__dirname, 'private/index.js'))) {
-  config = _.merge(config, require(path.join(__dirname, 'private/index.js')) || {});  
-}
 module.exports = config;
