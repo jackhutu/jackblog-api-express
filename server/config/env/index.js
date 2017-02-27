@@ -6,6 +6,7 @@ var fs = require('fs');
 
 var all = {
   env: process.env.NODE_ENV,
+  //规范化路径
   root: path.normalize(__dirname + '/../../..'),
   port: process.env.PORT || 9000,
   //mongodb配置
@@ -18,7 +19,7 @@ var all = {
   },
   //redis 配置
   redis: {
-    host: '127.0.0.1',
+    host: '192.168.12.25',
     port: 6379
   },
   //是否初始化数据
@@ -79,7 +80,7 @@ var all = {
 };
 
 var config = _.merge(all,require('./' + process.env.NODE_ENV + '.js') || {});
-//加载私有配置
+//加载私有配置,同步读取文件
 if (fs.existsSync(path.join(__dirname, 'private/index.js'))) {
   config = _.merge(config, require(path.join(__dirname, 'private/index.js')) || {});  
 }

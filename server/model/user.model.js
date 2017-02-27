@@ -7,7 +7,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var crypto = require('crypto');
 
-
+//定义一个Schema
 var UserSchema = new Schema({
 	// username:{
 	// 	type:String,
@@ -149,6 +149,7 @@ UserSchema
 /**
  * methods
  */
+//为Schema模型追加方法
 UserSchema.methods = {
 	//检查用户权限
 	hasRole: function(role) {
@@ -173,7 +174,12 @@ UserSchema.methods = {
 
 UserSchema.set('toObject', { virtuals: true });
 
+//将该Schema发布为Model
 var User = mongoose.model('User', UserSchema);
+//如果该Model已经发布，则可以直接通过名字索引到，如下：
+//var User = db.model('User');
+//如果没有发布，上一段代码将会异常
+
 var Promise = require('bluebird');
 Promise.promisifyAll(User);
 Promise.promisifyAll(User.prototype);

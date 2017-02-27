@@ -12,7 +12,7 @@ exports.paths = {
  */
 exports.errorHandler = function() {
   return function (err) {
-    gutil.beep();
-    gutil.log(err.toString());
+    gutil.beep(); //输出一个提示音
+    gutil.log(err.toString()); //gulp运行中提供一些日志提示
   }
 };
