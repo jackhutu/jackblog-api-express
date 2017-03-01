@@ -1,5 +1,6 @@
 'use strict';
 
+//七牛云工客户端
 var _ = require('lodash');
 var config = require('../../config/env');
 var mongoose = require('mongoose');

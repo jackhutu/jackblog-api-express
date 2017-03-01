@@ -259,24 +259,28 @@ exports.getPrenext = function (req,res,next) {
 //获取首页图片
 exports.getIndexImage = function (req,res,next) {
 	//使用redis缓存图片列表.
+	//Returns the length of the list stored at key
 	redis.llen('indexImages').then(function (imagesCount) {
 		if(imagesCount < 1){
 			res.status(200).json({success:true,img:config.defaultIndexImage});
 			if(config.qiniu.app_key !== '' && config.qiniu.app_secret !== ''){
 				return qiniuHelper.list('blog/index','',30).then(function(result){
 					return Promise.map(result.items,function (item) {
+						//Insert all the specified values at the head of the list stored at key
 						return redis.lpush('indexImages',config.qiniu.domain + item.key + '-600x1500q80');
 					});
 				});
 			}
 			return;
 		}else{
+            //Returns the specified elements of the list stored at key. The offsets start and stop are zero-based indexes, with 0 being the first element of the list (the head of the list), 1 being the next element and so on
 			return redis.lrange('indexImages', 0, 30).then(function (images) {
 				var index = _.random(images.length - 1);
 				return res.status(200).json({success:true,img:images[index]});
 			});
 		}
 	}).catch(function (err) {
+		//Removes the specified keys
 		redis.del('indexImages');
 		return next(err);
 	});

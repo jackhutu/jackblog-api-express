@@ -1,5 +1,7 @@
 'use strict'
 
+//redis配置:https://www.npmjs.com/package/ioredis
+//redis命令:https://redis.io/commands/llen(commond)
 var _ = require('lodash');
 var Redis = require("ioredis");
 var config = require('../../config/env');

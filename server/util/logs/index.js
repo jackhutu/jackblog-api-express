@@ -3,7 +3,7 @@
 var path = require('path');
 var bunyan = require('bunyan');
 var config = require('../../config/env');
-
+//nodejs日志:https://www.npmjs.com/package/bunyan
 var bunyanConfig = {
 	name: 'hutublog',
 	serializers: {
