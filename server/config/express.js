@@ -1,6 +1,5 @@
 'use strict';
 
-var express = require('express');
 var compression = require('compression');
 var bodyParser = require('body-parser');
 var cors = require('cors');
